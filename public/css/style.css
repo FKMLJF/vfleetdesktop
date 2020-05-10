@@ -75,3 +75,7 @@ input[type="radio"], input[type="checkbox"] {
     -webkit-transition: .2s;
     transition: .2s;
 }
+
+div.dt-buttons {
+    top: -8px;
+}

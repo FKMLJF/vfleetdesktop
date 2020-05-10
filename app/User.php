@@ -11,9 +11,9 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'felhasznalok';
+    protected $table = 'users';
 
-    protected $primaryKey = 'azonosito';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'nev','bejelentkezesi_nev', 'email', 'jelszo', 'google2fa_secret'
+        'name','bejelentkezesi_nev', 'email', 'password', 'google2fa_secret'
     ];
 
     /**
@@ -30,7 +30,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'jelszo', 'remember_token', 'google2fa_secret',
+        'password', 'remember_token', 'google2fa_secret',
     ];
 
     /**
@@ -64,33 +64,33 @@ class User extends Authenticatable
         clock(__FUNCTION__,$value);
         return decrypt($value);
     }
-
+/*
     public function getAuthPassword()
     {
-        return $this->jelszo;
+        return $this->password;
     }
 
     public function getPasswordAttribute($val)
     {
-        return $this->jelszo;
+        return $this->password;
     }
     public function setPasswordAttribute($val)
     {
-        return $this->jelszo=$val;
+        return $this->password=$val;
     }
 
     public function getAuthIdentifier()
     {
-        return $this->azonosito;
+        return $this->id;
     }
 
     public function getIdAttribute()
     {
-        return $this->azonosito;
+        return $this->id;
     }
 
-    public function toFelhasznalo() : Felhasznalok
+    public function toFelhasznalo() : User
     {
-        return Felhasznalok::find($this->getAuthIdentifier());
-    }
+        return User::find($this->getAuthIdentifier());
+    }*/
 }

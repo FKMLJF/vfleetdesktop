@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SzerepkorKapcsolo;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Closure;
@@ -21,6 +22,7 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
         header('Access-Control-Allow-Origin:  http://localhost:4200');
         header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Authorization, Origin');
         header('Access-Control-Allow-Methods:  POST, PUT');
@@ -50,6 +52,7 @@ class RedirectIfAuthenticated
             }
 
         }
+
 
         return $next($request);
     }

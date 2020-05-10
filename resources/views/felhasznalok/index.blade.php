@@ -52,34 +52,34 @@
             </button>
         </div>
     @endif
-    <nav aria-label="breadcrumb">
+    <nav aria-label="breadcrumb bg-primary text-white">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item "><a class="text-decoration-none text-success lg-text" href="{{route('home')}}">Főoldal</a>
+            <li class="breadcrumb-item "><a class="text-decoration-none lg-text" href="{{route('home')}}">Főoldal</a>
             </li>
             <li class="breadcrumb-item active lg-text" aria-current="page">Felhasználók</li>
         </ol>
     </nav>
-    <div class="row">
+    <div class="row p-2">
         <div class="col-12">
-            <table class="table table-secondary table-bordered display dt-responsive nowrap" id="felhasznalok_table"
+            <table class="table table-bordered display dt-responsive nowrap" id="felhasznalok_table"
                    style="width:100%">
-                <thead>
+                <thead class="blue-gradient text-white">
                 <th width="10px"></th>
                 <th>Azonosító</th>
                 <th>Név</th>
                 <th>Email</th>
-                <th>Bejelentkezési Név</th>
+                <th>Szerepkör</th>
                 <th>Megerősítve</th>
                 <th>Tiltott</th>
                 </thead>
                 <tbody>
                 </tbody>
-                <tfoot>
+                <tfoot class="blue-gradient text-white">
                 <th width="10px"></th>
                 <th>Azonosító</th>
                 <th>Név</th>
                 <th>Email</th>
-                <th>Bejelentkezési Név</th>
+                <th>Szerepkör</th>
                 <th>Megerősítve</th>
                 <th>Tiltott</th>
                 </tfoot>
@@ -114,10 +114,10 @@
                     lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Összes"]],
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, visible: false},
-                        {data: 'azonosito', name: 'azonosito'},
-                        {data: 'nev', name: 'nev'},
+                        {data: 'id', name: 'id'},
+                        {data: 'name', name: 'name'},
                         {data: 'email', name: 'email'},
-                        {data: 'bejelentkezesi_nev', name: 'bejelentkezesi_nev'},
+                        {data: 'szerepkor', name: 'szerepkor'},
                         {data: 'megerositve', name: 'megerositve'},
                         {data: 'tiltott', name: 'tiltott'},
 
@@ -127,9 +127,9 @@
                             "render": function (data, type, row) {
 
                                 if (data == "1") {
-                                    return '<input type="checkbox" checked data-id="' + row.azonosito + '" data-event="megerositett"  class="toggle-btn">'
+                                    return '<input type="checkbox" checked data-id="' + row.id + '" data-event="megerositett"  class="toggle-btn">'
                                 } else {
-                                    return '<input type="checkbox" data-id="' + row.azonosito + '" data-event="megerositett"  class="toggle-btn">'
+                                    return '<input type="checkbox" data-id="' + row.id + '" data-event="megerositett"  class="toggle-btn">'
                                 }
 
                             },
@@ -139,9 +139,9 @@
                             "render": function (data, type, row) {
 
                                 if (data == "1") {
-                                    return '<input type="checkbox" checked data-id="' + row.azonosito + '" data-event="tiltott" class="toggle-btn">'
+                                    return '<input type="checkbox" checked data-id="' + row.id + '" data-event="tiltott" class="toggle-btn">'
                                 } else {
-                                    return '<input type="checkbox" data-id="' + row.azonosito + '" data-event="tiltott"   class="toggle-btn">'
+                                    return '<input type="checkbox" data-id="' + row.id + '" data-event="tiltott"   class="toggle-btn">'
                                 }
 
                             },
@@ -159,7 +159,7 @@
                             onstyle: 'success',
                             offstyle: 'danger',
                             size: "mini",
-                            width: 50
+                            width: 75
                         });
 
                         $('.toggle-btn').change(function () {
@@ -187,36 +187,38 @@
                     },
                     buttons: [
                         {
-                            text: '<i class="fa fa-spinner text-info" style="font-size: 16px" aria-hidden="true" title="Táblázat frissítése"></i>',
+                            text: '<i class="fa fa-spinner text-white" style="font-size: 16px" aria-hidden="true" title="Táblázat frissítése"></i>',
+                            className: 'blue-gradient waves-effect',
                             action: function (e, dt, node, config) {
                                 dt.ajax.reload();
                             }
                         },
                         {
-                            text: '<i class="fa fa-plus text-success" style="font-size: 16px" title="Új felhasználó"></i>',
+                            text: '<i class="fa fa-plus text-white" style="font-size: 16px" title="Új felhasználó"></i>',
+                            className: 'blue-gradient waves-effect',
                             action: function (e, dt, node, config) {
                                 document.location.href = '{{route('felhasznalok.register')}}';
                             }
                         },
                         {
-                            text: '<i class="fa fa-edit text-warning" style="font-size: 16px" aria-hidden="true" title="Felhasználó módosítása"></i>',
-                            className: 'dtbtn',
+                            text: '<i class="fa fa-edit text-white" style="font-size: 16px" aria-hidden="true" title="Felhasználó módosítása"></i>',
+                            className: 'dtbtn blue-gradient waves-effect',
                             action: function () {
                                 if (azonosito == null) return -1;
                                 document.location.href = "{{url('/felhasznalok/szerkesztes/')}}/" + azonosito;
                             }
                         },
                         {
-                            text: '<i class="fa fa-key" style="font-size: 16px" title="Új jelszó"></i>',
-                            className: 'dtbtn',
+                            text: '<i class="fa fa-key text-white" style="font-size: 16px" title="Új jelszó"></i>',
+                            className: 'dtbtn blue-gradient waves-effect',
                             action: function (e, dt, node, config) {
                                 if (azonosito == null) return -1;
                                 document.location.href = "{{url('/felhasznalok/ujjelszo/')}}/" + azonosito;
                             }
                         },
                         {
-                            text: '<i class="fa fa-qrcode text-danger" style="font-size: 16px" title="QR kód lekérése"></i>',
-                            className: 'dtbtn',
+                            text: '<i class="fa fa-qrcode text-white" style="font-size: 16px" title="QR kód lekérése"></i>',
+                            className: 'dtbtn blue-gradient waves-effect',
                             action: function () {
                                 $.ajax({
                                     url: "{{route('felhasznalok.getqrcode')}}",
@@ -228,7 +230,7 @@
                                     console.log(data.qr);
                                     $('#qrmodal').modal('show');
                                     $('#user_qrcode').attr('src', data.qr);
-                                    $('#user_name').text(data.username);
+                                    $('#user_name').text(data.name);
                                 });
                             }
                         },
@@ -244,7 +246,7 @@
                     $('.dtbtn').css('cursor', 'pointer');
 
 
-                    azonosito = table.row(this).data().azonosito;
+                    azonosito = table.row(this).data().id;
                 });
             });
 

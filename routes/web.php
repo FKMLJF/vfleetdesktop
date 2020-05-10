@@ -10,9 +10,11 @@ Route::get('/incompatible_browser', function () {
 Auth
 --------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return view('home');
-})->middleware(array('auth', '2fa'));
+
+Route::post('/widgetdata', 'HomeController@widgetdata')->name('widgetdata');
+
+
+Route::get('/', 'HomeController@index')->middleware(array('auth', '2fa'));
 
 Route::get('/hirek', function () {
     return view('hirek');
@@ -76,9 +78,7 @@ Route::middleware(['auth','2fa' ])->group(function () {
             Route::get('ujjelszo/{azonosito}', 'FelhasznalokController@changepassword')->name('changepassword')->where(array('azonosito' => '[0-9]+'));
 
 
-            Route::get('register', function (){
-                return view('felhasznalok.create');
-            })->name('register');
+            Route::get('register','FelhasznalokController@create')->name('register');
 
             /** AJAX */
 

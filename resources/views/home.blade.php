@@ -17,16 +17,17 @@
 
     <div class="row text-white">
 
+        @if($role == 3)
         <div class="col-3 p-4">
             <div class="rounded blue-gradient waves-effect" style="cursor: pointer" onclick="document.location.href='{{route('felhasznalok.index')}}'">
                 <div class=" text-center p-2" style="position: relative">
                     <p class="p-2" style="font-size: 25px">Felhasználók</p>
-                    <span style="font-size: 20px">3 db</span>
-                    {{-- <span id="usercnt"><i class="fas fa-spinner fa-pulse"></i></span> --}}
+                    <span id="usercnt" style="font-size: 20px"><i class="fas fa-spinner fa-pulse"></i></span>
                     <i class="fas fa-user" style="position: absolute;bottom: 20px;right: 20px;font-size: 70px;opacity: 0.3;"></i>
                 </div>
             </div>
         </div>
+        @endif
 
         <div class="col-3 p-4">
             <div class="rounded blue-gradient waves-effect" style="cursor: pointer" >
@@ -69,5 +70,26 @@
 
 @endsection
 @section('extra_js')
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "{{route('widgetdata')}}",
+                method: 'POST',
+                data: {_token: "{{csrf_token()}}"},
+                context: document.body
+            }).done(function (d) {
+                let data = JSON.parse(d);
+                $('#usercnt').text(data[0]);
+                /*$('#customercnt').text(data[2]);
+                $('#inpcnt').text(data[1]);
+                $('#servicecnt').text(data[3]);
+                $('#servicetcnt').text(data[4]);
+                $('#templatecnt').text(data[5]);
+                $('#termcnt').text(data[6]);
+                $('#kintlevoseg').text(data[7]);
+                $('#fizetetseg').text(data[8]);*/
+            });
+        });
+    </script>
 
 @endsection

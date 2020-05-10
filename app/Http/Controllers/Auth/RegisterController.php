@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\SzerepkorKapcsolo;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -46,7 +47,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', '2fa']);
+      //  $this->middleware(['auth', '2fa']);
     }
 
     /**
@@ -59,9 +60,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'nev' => ['required', 'string', 'max:255'],
-            'bejelentkezesi_nev' => ['required', 'string', 'max:191'],
             'email' => ['required', 'string', 'email', 'max:255'/*, 'unique:felhasznalok'*/],
-            'jelszo' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -77,7 +77,7 @@ class RegisterController extends Controller
             'nev' => $data['nev'],
             'bejelentkezesi_nev' => $data['bejelentkezesi_nev'],
             'email' => $data['email'],
-            'jelszo' => bcrypt($data['jelszo']),
+            'password' => bcrypt($data['jelszo']),
             'google2fa_secret' => $data['google2fa_secret'],
             'api_token' => Uuid::uuid4()->toString()
         ]);
@@ -89,41 +89,82 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        //dd($request->post());
 
         if (!empty($request->input('azonosito'))) {
 
             if (!empty($request->input('edit'))) {
-                $user = User::where('azonosito', $request->input('azonosito'))->first();
+                $user = User::where('id', $request->input('azonosito'))->first();
                 if (!empty($user)) {
-                    $user->nev = $request->post('nev');
-                    $user->bejelentkezesi_nev = $request->post('bejelentkezesi_nev');
+                    $user->name = $request->post('name');
                     $user->email = $request->post('email');
                     $user->save();
-                    return Redirect::to("felhasznalok/index")->with('success', $user->bejelentkezesi_nev . " felhasználó adatainak módosítása sikeresen lezajlott!");
+                    $roleUpdate = SzerepkorKapcsolo::where('user_id', $request->input('azonosito'))->first();
+                    $roleUpdate->szerepkor_id = $request->input('szerepkor_id');
+                    $roleUpdate->save();
+                    return Redirect::to("felhasznalok/index")->with('success', $user->name . " felhasználó adatainak módosítása sikeresen lezajlott!");
                 }
             }
 
             if (!empty($request->input('changepassword'))) {
-                $user = User::where('azonosito', $request->input('azonosito'))->first();
+                $user = User::where('id', $request->input('azonosito'))->first();
                 if (!empty($user)) {
-                    $user->jelszo = bcrypt($request->post('jelszo'));
+                    $user->password = bcrypt($request->post('password'));
                     $user->save();
-                    return Redirect::to("felhasznalok/index")->with('success', $user->bejelentkezesi_nev . " felhasználó új jelszó beállítása sikeresen lezajlott!");
+                    return Redirect::to("felhasznalok/index")->with('success', $user->name . " felhasználó új jelszó beállítása sikeresen lezajlott!");
                 }
             }
         }
         // Initialise the 2FA class
         $google2fa = app('pragmarx.google2fa');
         if (!empty($request->input('withoutfa'))) {
+
             User::create([
-                'nev' => $request->input('nev'),
-                'bejelentkezesi_nev' => $request->input('bejelentkezesi_nev'),
+                'name' => $request->input('nev'),
+                'username' => $request->input('nev'),
                 'email' => $request->input('email'),
-                'jelszo' => bcrypt($request->input('jelszo')),
+                'password' => bcrypt($request->input('password')),
                 'api_token' => Uuid::uuid4()->toString(),
                 'google2fa_secret' => $google2fa->generateSecretKey(),
             ]);
+            if (!empty($request->input('withoutfa'))) {
+            $szerepkor = new SzerepkorKapcsolo();
+            $szerepkor->user_id = User::where('email', $request->input('email') )->first()->id;
+            $szerepkor->szerepkor_id = $request->input('szerepkor');
+            $szerepkor->save();
+            }
+
             return Redirect::to("felhasznalok/index")->with('success', 'Sikeres felhasználó létrehozás!');
+        }
+        else{
+            $googlefageneratedkey = $google2fa->generateSecretKey();
+            User::create([
+                'name' => $request->input('nev'),
+                'username' => $request->input('nev'),
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('jelszo')),
+                'api_token' => Uuid::uuid4()->toString(),
+                'google2fa_secret' => $googlefageneratedkey,
+            ]);
+            // Save the registration data in an array
+            $registration_data = $request->all();
+
+            // Add the secret key to the registration data
+            $registration_data["google2fa_secret"] = $googlefageneratedkey;
+
+            // Save the registration data to the user session for just the next request
+            $request->session()->flash('registration_data', $registration_data);
+
+            // Generate the QR image. This is the image the user will scan with their app
+            // to set up two factor authentication
+            $QR_Image = $google2fa->getQRCodeInline(
+                config('app.name'),
+                $registration_data['email'],
+                $registration_data['google2fa_secret']
+            );
+
+            // Pass the QR barcode image to our view
+            return view('google2fa.register', ['QR_Image' => $QR_Image, 'secret' => $registration_data['google2fa_secret']]);
         }
         //Validate the incoming request using the already included validator method
         $this->validator($request->all())->validate();

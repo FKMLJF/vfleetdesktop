@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Fajlok;
 use App\Models\Felhasznalok;
+use App\Models\SzerepkorKapcsolo;
 use App\Models\Termenyek;
 use App\Models\Ugyfelek;
+use App\User;
 use App\ViewModels\InputAnyagok;
 use App\ViewModels\SzolgaltatasTorzs;
 use App\ViewModels\Szolgaltatsok;
+use Auth;
 use DB;
 use Illuminate\Http\Request;
 
@@ -31,13 +34,20 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $role = SzerepkorKapcsolo::where('user_id', Auth::id())->first();
+            if(!empty($role)){
+                $role = $role->szerepkor_id;
+            }else{
+                $role = -1;
+            }
+
+        return view('home', compact('role'));
     }
 
     public function widgetdata()
     {
-        $usercnt = Felhasznalok::where('tiltott', '0')->count() . ' db';
-        $inpcnt = InputAnyagok::all()->count() . ' db';
+        $usercnt = User::where('tiltott', '0')->count() . ' db';
+       /* $inpcnt = InputAnyagok::all()->count() . ' db';
         $servicetcnt = SzolgaltatasTorzs::all()->count() . ' db';
         $customercnt = Ugyfelek::all()->count() . ' db';
         $templatecnt = Fajlok::all()->count() . ' db';
@@ -47,9 +57,9 @@ class HomeController extends Controller
         $servicecnt =DB::select("SELECT sum(nettoosszeg) as osszeg FROM `ugyfel_szolgaltatas_torzs` WHERE YEAR(mikor) = YEAR(now())")[0]->osszeg;
         $fizetve =  "Fizetettség: ".number_format((($kintlevoseg/$servicecnt)*100),2,",","")." %";
         $kintlevoseg = "Fizetve: ".number_format($kintlevoseg,0,".", " "). " Ft";
-        $servicecnt = "Összesen: ".number_format($servicecnt,0,".", " "). " Ft";
+        $servicecnt = "Összesen: ".number_format($servicecnt,0,".", " "). " Ft";*/
 
-        return json_encode(array($usercnt, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve));
+        return json_encode(array($usercnt/*, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve*/));
     }
 
 

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Felhasznalok;
+use App\Models\Szerepkor;
+use App\Models\SzerepkorKapcsolo;
 use App\User;
+use App\ViewModels\UserView;
+use Auth;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -16,7 +20,7 @@ class FelhasznalokController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', '2fa']);
+        $this->middleware(['auth', '2fa', "check_role"]);
     }
 
     /**
@@ -31,12 +35,12 @@ class FelhasznalokController extends Controller
 
     public function indexData(Request $request)
     {
-        $model = Felhasznalok::query();
+        $model = UserView::query();
         return DataTables::eloquent($model)
             ->addIndexColumn()
             ->filter(function ($query) {
-                if (request()->has('bejelentkezesi_nev')) {
-                    $query->where('bejelentkezesi_nev', 'like', "%" . request('bejelentkezesi_nev') . "%");
+                if (request()->has('username')) {
+                    $query->where('username', 'like', "%" . request('username') . "%");
                 }
 
             }, true)
@@ -45,7 +49,7 @@ class FelhasznalokController extends Controller
 
     public function userStatusChange(Request $r)
     {
-        $user = User::where('azonosito', $r->post('id') )->first();
+        $user = User::where('id', $r->post('id') )->first();
        if(!empty($user)) {
            if ($r->post('eventtype') == "megerositett") {
                $user->megerositve = ($r->post('checked') == "true")?1:0;
@@ -59,7 +63,7 @@ class FelhasznalokController extends Controller
     }
 
     public function getQrcode(Request $r){
-        $user = User::where('azonosito', $r->post('id') )->first();
+        $user = User::where('id', $r->post('id') )->first();
         $QR_Image = '';
         if(!empty($user)) {
             $google2fa = app('pragmarx.google2fa');
@@ -68,25 +72,38 @@ class FelhasznalokController extends Controller
                 $user->email,
                 $user->google2fa_secret
             );
-            return json_encode([ 'qr' => $QR_Image, 'username' => $user->bejelentkezesi_nev ]);
+            return json_encode([ 'qr' => $QR_Image, 'name' => $user->name ]);
         }
             return [$QR_Image, ''];
     }
 
     public function edit($azonosito)
     {
-        $user = User::where('azonosito', $azonosito )->first();
+        $user = User::where('id', $azonosito )->first();
+        $select = Szerepkor::all('azonosito', 'nev')->toArray();
+        $role = SzerepkorKapcsolo::where('user_id', $azonosito)->first();
+        if(!empty($role)){
+            $role = $role->szerepkor_id;
+        }else{
+            $role = -1;
+        }
         if(!empty($user)) {
-            return view('felhasznalok.edit', compact('user'));
+            return view('felhasznalok.edit', compact('user', 'select', 'role'));
         }
     }
 
     public function changepassword($azonosito)
     {
-        $user = User::where('azonosito', $azonosito )->first();
+        $user = User::where('id', $azonosito )->first();
         if(!empty($user)) {
             return view('felhasznalok.changepassword', compact('user'));
         }
+    }
+
+    public function create()
+    {
+        $select = Szerepkor::all('azonosito', 'nev')->toArray();
+        return view('felhasznalok.create', compact('select'));
     }
 
 }

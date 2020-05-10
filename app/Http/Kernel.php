@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         '2fa' => \PragmaRX\Google2FALaravel\Middleware::class,
         'trakjog' => \App\Http\Middleware\TraktorosJog::class,
         'perp_mobil' => \App\Http\Middleware\PerpMobil::class,
+        'check_role' => \App\Http\Middleware\CheckRole::class,
         'browser.allow' => \Spinen\BrowserFilter\Route\AllowFilter::class,
         'browser.block' => \Spinen\BrowserFilter\Route\BlockFilter::class,
         'cors' => \App\Http\Middleware\Cors::class, // <-- add this line

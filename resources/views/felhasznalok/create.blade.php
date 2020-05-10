@@ -1,90 +1,110 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item "><a class="text-decoration-none text-success lg-text" href="{{route('home')}}">Főoldal</a></li>
-                <li class="breadcrumb-item active lg-text" aria-current="page"><a class="text-decoration-none text-warning lg-text" href="{{route('felhasznalok.index')}}">Felhasználók</a></li>
-                <li class="breadcrumb-item active lg-text" aria-current="page">Új felhasználó létrehozás</li>
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb bg-primary text-white">
+            <ol class="breadcrumb bg-primary text-white">
+                <li class="breadcrumb-item "><a class="text-decoration-none text-white lg-text"
+                                                href="{{route('home')}}">Főoldal</a></li>
+                <li class="breadcrumb-item active lg-text" aria-current="page"><a
+                        class="text-decoration-none text-white lg-text" href="{{route('felhasznalok.index')}}">Felhasználók</a>
+                </li>
+
             </ol>
         </nav>
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Felhasználó Létrehozás</div>
+                    <div class="card-header blue-gradient text-white">Felhasználó Létrehozás</div>
 
                     <div class="card-body">
                         <form method="POST" action="{{ route('register') }}">
                             @csrf
-                                <input type="hidden" name="withoutfa" value="1">
-                            <div class="form-group row">
-                                <label for="nev" class="col-md-4 col-form-label text-md-right">Teljes név</label>
-
-                                <div class="col-md-6">
-                                    <input id="nev" type="text" class="form-control @error('nev') is-invalid @enderror" name="nev" value="{{ old('nev') }}" required autocomplete="name" autofocus>
-
-                                    @error('nev')
-                                    <span class="invalid-feedback" role="alert">
+                            <input type="hidden" name="withoutfa" value="1">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="md-form">
+                                        <label for="nev">Felhasználónév</label>
+                                        <input id="nev" type="text"
+                                               class="form-control @error('nev') is-invalid @enderror"
+                                               name="nev" value="{{ old('nev') }}" required autocomplete="name"
+                                               autofocus>
+                                        @error('nev')
+                                        <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                    @enderror
+                                        @enderror
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-6">
+                                    <div class="md-form">
+                                        <label for="email">E-mail cím</label>
+                                        <input id="email" type="email"
+                                               class="form-control @error('email') is-invalid @enderror" name="email"
+                                               value="{{ old('email') }}" required autocomplete="email">
 
-                            <div class="form-group row">
-                                <label for="bejelentkezesi_nev" class="col-md-4 col-form-label text-md-right">Bejelentkezési név</label>
-
-                                <div class="col-md-6">
-                                    <input id="bejelentkezesi_nev" type="text" class="form-control @error('bejelentkezesi_nev') is-invalid @enderror" name="bejelentkezesi_nev" value="{{ old('bejelentkezesi_nev') }}" required autocomplete="name" autofocus>
-
-                                    @error('bejelentkezesi_nev')
-                                    <span class="invalid-feedback" role="alert">
+                                        @error('email')
+                                        <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                    @enderror
+                                        @enderror
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-6">
+                                    <div class="md-form">
+                                        <label for="password">Jelszó</label>
+                                        <input id="password" type="password"
+                                               class="form-control @error('jelszo') is-invalid @enderror" name="password"
+                                               required autocomplete="new-password">
 
-                            <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">E-mail cím</label>
-
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                    @error('email')
-                                    <span class="invalid-feedback" role="alert">
+                                        @error('jelszo')
+                                        <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                    @enderror
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="md-form">
+                                        <label for="jelszo-confirm">Jelszó
+                                            megerősítés</label>
+
+                                        <input id="jelszo-confirm" type="password" class="form-control"
+                                               name="jelszo_confirmation" required autocomplete="new-password">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="szerepkor" class="col-4 col-form-label">Szerepkör</label>
+                                    <div class="col-8">
+                                        <select id="szerepkor" name="szerepkor" aria-describedby="szerepkorHelpBlock" required="required"
+                                                class="custom-select selectpicker {{ $errors->has('_egyseg') ? ' is-invalid' : '' }}">
+                                            <option value="-1">Válasszon a listából..</option>
+                                            @foreach($select as $item)
+
+                                                <option value="{{$item['azonosito']}}">{{$item['nev']}}
+
+                                                </option>
+
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @if ($errors->has('_egyseg'))
+                                        <div class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+                                            <strong>Hiba!</strong> {{ $errors->first('_egyseg') }}
+
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="jelszo" class="col-md-4 col-form-label text-md-right">Jelszó</label>
-
-                                <div class="col-md-6">
-                                    <input id="jelszo" type="password" class="form-control @error('jelszo') is-invalid @enderror" name="jelszo" required autocomplete="new-password">
-
-                                    @error('jelszo')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="jelszo-confirm" class="col-md-4 col-form-label text-md-right">Jelszó megerősítés</label>
-
-                                <div class="col-md-6">
-                                    <input id="jelszo-confirm" type="password" class="form-control" name="jelszo_confirmation" required autocomplete="new-password">
-                                </div>
-                            </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                            <div class="row">
+                                <div class="offset-10 col-2">
+                                    <button type="submit" class="btn btn-primary  waves-effect">
                                         Mentés
                                     </button>
                                 </div>

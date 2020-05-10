@@ -12,20 +12,20 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header"><strong class="text-danger text-monospace">{{$user->bejelentkezesi_nev}}</strong> felhasználóhoz új jelszó beállítása</div>
+                    <div class="card-header"><strong class="text-danger text-monospace">{{$user->name}}</strong> felhasználóhoz új jelszó beállítása</div>
 
                     <div class="card-body">
                         <form method="POST" action="{{ route('register') }}">
                             @csrf
                             <div class="form-group row">
-                                <input type="hidden" name="azonosito" value="{{$user->azonosito}}">
+                                <input type="hidden" name="azonosito" value="{{$user->id}}">
                                 <input type="hidden" name="changepassword" value="1">
                                 <label for="jelszo" class="col-md-4 col-form-label text-md-right">Jelszó</label>
 
                                 <div class="col-md-6">
-                                    <input id="jelszo" type="password" class="form-control @error('jelszo') is-invalid @enderror" name="jelszo" required autocomplete="new-password">
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password    " required autocomplete="new-password">
 
-                                    @error('jelszo')
+                                    @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
