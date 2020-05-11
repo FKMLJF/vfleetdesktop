@@ -88,9 +88,26 @@ Route::middleware(['auth','2fa' ])->group(function () {
 
             Route::post('getqrcode', 'FelhasznalokController@getQrcode')->name('getqrcode');
 
-
-
         });
 
+
+    Route::as('autok.')
+        ->prefix('autok')
+        ->group(function () {
+
+            Route::get('index', 'CarController@index')->name('index');
+
+            Route::get('create', 'CarController@create')->name('create');
+
+            Route::get('szerkesztes/{azonosito}', 'CarController@update')->name('szerkesztes')->where(array('azonosito' => '[0-9]+'));
+
+            Route::post('store', 'CarController@store')->name('store');
+
+            /**AJAX*/
+
+            Route::get('indexdata', 'CarController@indexData')->name('indexdata');
+
+            Route::post('visible', 'CarController@visible')->name('visible');
+        });
 
 });

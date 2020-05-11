@@ -79,3 +79,10 @@ input[type="radio"], input[type="checkbox"] {
 div.dt-buttons {
     top: -8px;
 }
+
+.select{
+    padding-bottom:11px!important;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}

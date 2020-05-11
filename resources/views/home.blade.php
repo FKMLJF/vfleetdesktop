@@ -30,11 +30,10 @@
         @endif
 
         <div class="col-3 p-4">
-            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" >
+            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" onclick="document.location.href='{{route('autok.index')}}'">
                 <div class=" text-center p-2" style="position: relative">
                     <p class="p-2" style="font-size: 25px">Járművek</p>
-                    <span style="font-size: 20px">6 db</span>
-                    {{-- <span id="usercnt"><i class="fas fa-spinner fa-pulse"></i></span> --}}
+                     <span id="carcnt" style="font-size: 20px"><i class="fas fa-spinner fa-pulse"></i></span>
                     <i class="fas fa-car" style="position: absolute;bottom: 20px;right: 20px;font-size: 70px;opacity: 0.3;"></i>
                 </div>
             </div>
@@ -80,8 +79,8 @@
             }).done(function (d) {
                 let data = JSON.parse(d);
                 $('#usercnt').text(data[0]);
-                /*$('#customercnt').text(data[2]);
-                $('#inpcnt').text(data[1]);
+                $('#carcnt').text(data[1]);
+                /*$('#inpcnt').text(data[1]);
                 $('#servicecnt').text(data[3]);
                 $('#servicetcnt').text(data[4]);
                 $('#templatecnt').text(data[5]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Autok;
 use App\Models\Fajlok;
 use App\Models\Felhasznalok;
 use App\Models\SzerepkorKapcsolo;
@@ -47,19 +48,19 @@ class HomeController extends Controller
     public function widgetdata()
     {
         $usercnt = User::where('tiltott', '0')->count() . ' db';
-       /* $inpcnt = InputAnyagok::all()->count() . ' db';
-        $servicetcnt = SzolgaltatasTorzs::all()->count() . ' db';
-        $customercnt = Ugyfelek::all()->count() . ' db';
-        $templatecnt = Fajlok::all()->count() . ' db';
-        $termcnt = Termenyek::all()->count() . ' db';
-        $kintlevoseg = DB::select("SELECT sum(fizetve) as tartozas FROM ugyfel_szolgaltatas_torzs WHERE teljesitve = 1 and YEAR(mikor) = YEAR(now())")[0]->tartozas;
-        $servicecnt =DB::select("SELECT sum(nettoosszeg) as osszeg FROM `ugyfel_szolgaltatas_torzs` WHERE YEAR(mikor) = YEAR(now())")[0]->osszeg;
-        $servicecnt =DB::select("SELECT sum(nettoosszeg) as osszeg FROM `ugyfel_szolgaltatas_torzs` WHERE YEAR(mikor) = YEAR(now())")[0]->osszeg;
-        $fizetve =  "Fizetettség: ".number_format((($kintlevoseg/$servicecnt)*100),2,",","")." %";
-        $kintlevoseg = "Fizetve: ".number_format($kintlevoseg,0,".", " "). " Ft";
-        $servicecnt = "Összesen: ".number_format($servicecnt,0,".", " "). " Ft";*/
+        $carcnt = Autok::where('rejtett', '0')->count() . ' db';
+        /* $servicetcnt = SzolgaltatasTorzs::all()->count() . ' db';
+         $customercnt = Ugyfelek::all()->count() . ' db';
+         $templatecnt = Fajlok::all()->count() . ' db';
+         $termcnt = Termenyek::all()->count() . ' db';
+         $kintlevoseg = DB::select("SELECT sum(fizetve) as tartozas FROM ugyfel_szolgaltatas_torzs WHERE teljesitve = 1 and YEAR(mikor) = YEAR(now())")[0]->tartozas;
+         $servicecnt =DB::select("SELECT sum(nettoosszeg) as osszeg FROM `ugyfel_szolgaltatas_torzs` WHERE YEAR(mikor) = YEAR(now())")[0]->osszeg;
+         $servicecnt =DB::select("SELECT sum(nettoosszeg) as osszeg FROM `ugyfel_szolgaltatas_torzs` WHERE YEAR(mikor) = YEAR(now())")[0]->osszeg;
+         $fizetve =  "Fizetettség: ".number_format((($kintlevoseg/$servicecnt)*100),2,",","")." %";
+         $kintlevoseg = "Fizetve: ".number_format($kintlevoseg,0,".", " "). " Ft";
+         $servicecnt = "Összesen: ".number_format($servicecnt,0,".", " "). " Ft";*/
 
-        return json_encode(array($usercnt/*, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve*/));
+        return json_encode(array($usercnt,$carcnt/*, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve*/));
     }
 
 
