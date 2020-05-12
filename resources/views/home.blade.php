@@ -40,7 +40,19 @@
         </div>
 
         <div class="col-3 p-4">
-            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" >
+            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" onclick="document.location.href='{{route('munkalapok.index')}}'">
+                <div class=" text-center p-2" style="position: relative">
+                    <p class="p-2" style="font-size: 25px">Munkalapok</p>
+                    <span style="font-size: 20px">2 db</span>
+                    {{-- <span id="usercnt"><i class="fas fa-spinner fa-pulse"></i></span> --}}
+                    <i class="fas fa-edit" style="position: absolute;bottom: 20px;right: 20px;font-size: 70px;opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-3 p-4">
+            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" onclick="document.location.href='{{route('munkalapok.index')}}'">
                 <div class=" text-center p-2" style="position: relative">
                     <p class="p-2" style="font-size: 25px">Emlékeztetők</p>
                     <span style="font-size: 20px">12 db</span>

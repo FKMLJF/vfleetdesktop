@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autok;
+use App\User;
 use App\ViewModels\InputAnyagok;
 use DataTables;
 use Illuminate\Http\Request;
@@ -29,9 +30,13 @@ class CarController
         return DataTables::eloquent($model)
             ->addIndexColumn()
             ->filter(function ($query) {
+                $query->where('user_id', '=', \Auth::id());
+                $query->orWhere('user_id', '=', User::where('id', '=', \Auth::id())->first()->root_user );
+
                 if (request()->has('nev')) {
-                    $query->where('nev', 'like', "%" . request('nev') . "%");
+                    $query->where('nev', 'like', "'%" . request('nev') . "%'");
                 }
+
             }, true)
             ->toJson();
     }

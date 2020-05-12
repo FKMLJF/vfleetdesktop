@@ -27,25 +27,27 @@
     </nav>
     <div class="row">
         <div class="col-12">
-            <table class="table table-secondary table-bordered display dt-responsive nowrap" id="autok_table"
+            <table class="table table-secondary table-bordered display dt-responsive nowrap" id="munkalapok_table"
                    style="width:100%">
                 <thead class="blue-gradient text-white">
                 <th width="10px"></th>
                 <th>Azonosító</th>
-                <th>Rendszám</th>
-                <th>Márka</th>
-                <th>Típus</th>
-                <th>Rejtett</th>
+                <th>Név</th>
+                <th>Jármű</th>
+                <th>N. ár</th>
+                <th>Elvégezve</th>
+                <th>leirás</th>
                 </thead>
                 <tbody>
                 </tbody>
                 <tfoot class="blue-gradient text-white">
                 <th width="10px"></th>
                 <th>Azonosító</th>
-                <th>Rendszám</th>
-                <th>Márka</th>
-                <th>Típus</th>
-                <th>Rejtett</th>
+                <th>Név</th>
+                <th>Jármű</th>
+                <th>N. ár</th>
+                <th>Elvégezve</th>
+                <th>leirás</th>
                 </tfoot>
             </table>
         </div>
@@ -64,13 +66,13 @@
             var azonosito = null;
             var tabnev = null;
             $(function () {
-                var table = $('#autok_table').DataTable({
+                var table = $('#munkalapok_table').DataTable({
                     processing: true,
                     serverSide: true,
                     stateSave: true,
                     statesave: true,
                     ajax: {
-                        "url": '{{route('autok.indexdata')}}',
+                        "url": '{{route('munkalapok.indexdata')}}',
                         "dataType": "json",
                         "type": "get",
                         "data": {_token: "{{csrf_token()}}"}
@@ -80,20 +82,16 @@
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, visible: false},
                         {data: 'azonosito', name: 'azonosito'},
-                        {data: 'rendszam', name: 'rendszam'},
-                        {data: 'marka', name: 'marka'},
-                        {data: 'tipus', name: 'tipus'},
-                        {data: 'rejtett', name: 'rejtett'},
+                        {data: 'nev', name: 'nev'},
+                        {data: 'auto_azonosito', name: 'auto_azonosito'},
+                        {data: 'ar', name: 'ar'},
+                        {data: 'created_at', name: 'created_at'},
+                        {data: 'leiras', name: 'leiras'},
                     ],
                     "columnDefs": [
                         {
                             "render": function (data, type, row) {
-
-                                if (data == "1") {
-                                    return '<input type="checkbox" checked data-id="' + row.azonosito + '"  class="toggle-btn">'
-                                } else {
-                                    return '<input type="checkbox" data-id="' + row.azonosito + '"  class="toggle-btn">'
-                                }
+                                return data.substring(0,10);
 
                             },
                             "targets": 5
@@ -104,32 +102,7 @@
                         $('.dtbtn').addClass('disabled');
                         $('.dtbtn').css('cursor', 'not-allowed');
 
-                        $('.toggle-btn').bootstrapToggle({
-                            on: 'Igen',
-                            off: 'Nem',
-                            onstyle: 'danger',
-                            offstyle: 'success',
-                            size: "mini",
-                            width: 75
-                        });
 
-                        $('.toggle-btn').change(function () {
-                            //$(this).prop('checked')
-                            $.ajax({
-                                url: "{{route('autok.visible')}}",
-                                method: 'POST',
-                                data: {
-                                    _token: "{{csrf_token()}}",
-                                    id: $(this).data('id'),
-                                    checked: $(this).prop('checked')
-                                },
-                                context: document.body
-                            }).done(function (data) {
-
-                            });
-
-
-                        })
                     },
                     dom: 'Blfrtip',
                     "language": {
@@ -137,18 +110,18 @@
                     },
                     buttons: [
                         {
-                            text: '<i class="fa fa-plus text-white" style="font-size: 16px" title="Új jármű hozzáadása."></i>',
+                            text: '<i class="fa fa-plus text-white" style="font-size: 16px" title="Új mukalap hozzáadása."></i>',
                             className: ' blue-gradient waves-effect',
                             action: function (e, dt, node, config) {
-                                document.location.href = '{{route('autok.create')}}';
+                                document.location.href = '{{route('munkalapok.create')}}';
                             }
                         },
                         {
-                            text: '<i class="fa fa-edit text-white" style="font-size: 16px" aria-hidden="true" title="Jármű módosítása"></i>',
+                            text: '<i class="fa fa-edit text-white" style="font-size: 16px" aria-hidden="true" title="Munkalap módosítása"></i>',
                             className: 'modositas-btn blue-gradient waves-effect',
                             action: function () {
                                 if(azonosito == null) return -1;
-                                document.location.href = "{{url('/autok/szerkesztes/')}}/"+azonosito;
+                                document.location.href = "{{url('/munkalapok/szerkesztes/')}}/"+azonosito;
                             }
                         },
                         {
@@ -162,7 +135,7 @@
 
                     ]
                 });
-                $('#autok_table tbody').on('click', 'tr', function () {
+                $('#munkalapok_table tbody').on('click', 'tr', function () {
                     $('tr').removeClass('bg-info text-white');
                     $(this).addClass('bg-info text-white');
                     $('.modositas-btn').attr('aria-disabled', false);

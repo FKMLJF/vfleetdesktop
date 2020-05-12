@@ -86,3 +86,20 @@ div.dt-buttons {
     border-left: none;
     border-right: none;
 }
+
+
+.md-form label.active.active2 {
+    -webkit-transform: translateY(-29px) scale(0.8);
+    transform: translateY(-29px) scale(0.8);
+    font-size: 18px;
+}
+
+label.active2 {
+    -webkit-transform: translateX(10px) scale(0.8);
+    transform: translateX(10px) scale(0.8);
+    font-size: 18px;
+}
+
+.btn{
+    border-radius: 40px;
+}

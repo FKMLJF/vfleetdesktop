@@ -63,7 +63,7 @@
                 </button>
             </div>
         @endif
-    <main>
+    <main class="p-2">
         @yield('content')
     </main>
 

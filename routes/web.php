@@ -110,4 +110,22 @@ Route::middleware(['auth','2fa' ])->group(function () {
             Route::post('visible', 'CarController@visible')->name('visible');
         });
 
+    Route::as('munkalapok.')
+        ->prefix('munkalapok')
+        ->group(function () {
+
+            Route::get('index', 'MunkalapokController@index')->name('index');
+
+            Route::get('create', 'MunkalapokController@create')->name('create');
+
+            Route::get('szerkesztes/{azonosito}', 'MunkalapokController@update')->name('szerkesztes')->where(array('azonosito' => '[0-9]+'));
+
+            Route::post('store', 'MunkalapokController@store')->name('store');
+
+            /**AJAX*/
+
+            Route::get('indexdata', 'MunkalapokController@indexData')->name('indexdata');
+
+            Route::post('visible', 'MunkalapokController@visible')->name('visible');
+        });
 });

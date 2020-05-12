@@ -49,11 +49,15 @@
                                    value="{{ $model['rendszam'] }}"
                                 @endif>
                             <label for="rendszam" class="active"><strong class="text-danger">*</strong> Rendszám</label>
-                            @error('rendszam')
-                            <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                        </span>
-                            @enderror
+                            @if ($errors->has('rendszam'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('rendszam') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-4">
@@ -84,11 +88,15 @@
                                     @endif>Hibrid Dízel</option>
                             </select>
                             <label for="uzemmod"  class="    {!! !empty($model['uzemmod'])?'active':'' !!}"><strong class="text-danger">*</strong> Üzemmód</label>
-                            @error('uzemmod')
-                            <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                        </span>
-                            @enderror
+                            @if ($errors->has('uzemmod'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('uzemmod') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-4">
@@ -100,11 +108,15 @@
                                    value="{{ $model['marka'] }}"
                                 @endif>
                             <label for="marka" class="active">Márka</label>
-                            @error('marka')
-                            <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                        </span>
-                            @enderror
+                            @if ($errors->has('marka'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('marka') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-4">

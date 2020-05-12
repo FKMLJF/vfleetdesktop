@@ -143,6 +143,7 @@ class RegisterController extends Controller
                 'username' => $request->input('nev'),
                 'email' => $request->input('email'),
                 'password' => bcrypt($request->input('jelszo')),
+                'root_user' => \Auth::id(),
                 'api_token' => Uuid::uuid4()->toString(),
                 'google2fa_secret' => $googlefageneratedkey,
             ]);
