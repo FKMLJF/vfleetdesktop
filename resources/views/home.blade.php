@@ -43,8 +43,7 @@
             <div class="rounded blue-gradient waves-effect" style="cursor: pointer" onclick="document.location.href='{{route('munkalapok.index')}}'">
                 <div class=" text-center p-2" style="position: relative">
                     <p class="p-2" style="font-size: 25px">Munkalapok</p>
-                    <span style="font-size: 20px">2 db</span>
-                    {{-- <span id="usercnt"><i class="fas fa-spinner fa-pulse"></i></span> --}}
+                     <span id="munkalapcnt" style="font-size: 20px"><i class="fas fa-spinner fa-pulse"></i></span>
                     <i class="fas fa-edit" style="position: absolute;bottom: 20px;right: 20px;font-size: 70px;opacity: 0.3;"></i>
                 </div>
             </div>
@@ -63,11 +62,10 @@
         </div>
 
         <div class="col-3 p-4">
-            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" >
+            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" onclick="document.location.href='{{route('hibak.index')}}'">
                 <div class=" text-center p-2" style="position: relative">
                     <p class="p-2" style="font-size: 25px">Hibák</p>
-                    <span style="font-size: 20px">1 db</span>
-                    {{-- <span id="usercnt"><i class="fas fa-spinner fa-pulse"></i></span> --}}
+                    <span id="errorcnt" style="font-size: 20px"><i class="fas fa-spinner fa-pulse"></i></span>
                     <i class="fas fa-bug" style="position: absolute;bottom: 20px;right: 20px;font-size: 70px;opacity: 0.3;"></i>
                 </div>
             </div>
@@ -92,6 +90,8 @@
                 let data = JSON.parse(d);
                 $('#usercnt').text(data[0]);
                 $('#carcnt').text(data[1]);
+                $('#munkalapcnt').text(data[2]);
+                $('#errorcnt').text(data[3]);
                 /*$('#inpcnt').text(data[1]);
                 $('#servicecnt').text(data[3]);
                 $('#servicetcnt').text(data[4]);

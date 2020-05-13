@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Autok;
 use App\Models\Fajlok;
 use App\Models\Felhasznalok;
+use App\Models\Hibajegy;
+use App\Models\Munkalapok;
 use App\Models\SzerepkorKapcsolo;
 use App\Models\Termenyek;
 use App\Models\Ugyfelek;
 use App\User;
+use App\ViewModels\HibakView;
 use App\ViewModels\InputAnyagok;
 use App\ViewModels\SzolgaltatasTorzs;
 use App\ViewModels\Szolgaltatsok;
@@ -47,8 +50,10 @@ class HomeController extends Controller
 
     public function widgetdata()
     {
-        $usercnt = User::where('tiltott', '0')->count() . ' db';
-        $carcnt = Autok::where('rejtett', '0')->count() . ' db';
+        $usercnt = User::where('tiltott', '0')->whereRaw(  " id IN (Select id from users where root_user=?) or id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $carcnt = Autok::where('rejtett', '0')->whereRaw(  " (user_id IN (Select id from users where root_user=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $munkalapcnt = Munkalapok::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $hibacnt = HibakView::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
         /* $servicetcnt = SzolgaltatasTorzs::all()->count() . ' db';
          $customercnt = Ugyfelek::all()->count() . ' db';
          $templatecnt = Fajlok::all()->count() . ' db';
@@ -59,8 +64,7 @@ class HomeController extends Controller
          $fizetve =  "Fizetettség: ".number_format((($kintlevoseg/$servicecnt)*100),2,",","")." %";
          $kintlevoseg = "Fizetve: ".number_format($kintlevoseg,0,".", " "). " Ft";
          $servicecnt = "Összesen: ".number_format($servicecnt,0,".", " "). " Ft";*/
-
-        return json_encode(array($usercnt,$carcnt/*, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve*/));
+        return json_encode(array($usercnt,$carcnt,$munkalapcnt,$hibacnt/*, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve*/));
     }
 
 

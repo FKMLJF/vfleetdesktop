@@ -103,3 +103,7 @@ label.active2 {
 .btn{
     border-radius: 40px;
 }
+
+.donttouch{
+    cursor: not-allowed;
+}

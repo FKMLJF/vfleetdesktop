@@ -127,5 +127,35 @@ Route::middleware(['auth','2fa' ])->group(function () {
             Route::get('indexdata', 'MunkalapokController@indexData')->name('indexdata');
 
             Route::post('visible', 'MunkalapokController@visible')->name('visible');
+
+            Route::post('delete', 'MunkalapokController@delete')->name('delete');
+
+            Route::post('selecthibajegy', 'MunkalapokController@selecthibajegy')->name('selecthibajegy');
+
+
+
+
+        });
+
+
+    Route::as('hibak.')
+        ->prefix('hibak')
+        ->group(function () {
+
+            Route::get('index', 'HibakController@index')->name('index');
+
+            Route::get('create', 'HibakController@create')->name('create');
+
+            Route::get('szerkesztes/{azonosito}', 'HibakController@update')->name('szerkesztes')->where(array('azonosito' => '[0-9]+'));
+
+            Route::post('store', 'HibakController@store')->name('store');
+
+            /**AJAX*/
+
+            Route::get('indexdata', 'HibakController@indexData')->name('indexdata');
+
+            Route::post('visible', 'HibakController@visible')->name('visible');
+
+            Route::post('delete', 'HibakController@delete')->name('delete');
         });
 });

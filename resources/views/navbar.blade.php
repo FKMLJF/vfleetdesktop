@@ -11,18 +11,25 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle  text-white" href="#" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        {{__('Modulok')}} <span class="caret"></span>
+                <li class="nav-item">
+                    <a  class="nav-link   text-white" href="{{ route('felhasznalok.index') }}" >
+                        {{__('Felhasználók')}} <span class="caret"></span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-
-                        <a class="dropdown-item  text-dark" href="{{ route('felhasznalok.index') }}">
-                            {{ __('Felhasználók') }}
-                        </a>
-
-                    </div>
+                </li>
+                <li class="nav-item">
+                    <a  class="nav-link   text-white" href="{{ route('autok.index') }}" >
+                        {{__('Járművek')}} <span class="caret"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a  class="nav-link   text-white" href="{{ route('munkalapok.index') }}" >
+                        {{__('Munkalapok')}} <span class="caret"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a  class="nav-link   text-white" href="{{ route('hibak.index') }}" >
+                        {{__('Hibák')}} <span class="caret"></span>
+                    </a>
                 </li>
 
              {{--   <li class="nav-item dropdown">
