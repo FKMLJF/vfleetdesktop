@@ -11,24 +11,29 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a  class="nav-link   text-white" href="{{ route('felhasznalok.index') }}" >
+                <li class="nav-item pl-2 pr-2">
+                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('felhasznalok.index') }}" >
                         {{__('Felhasználók')}} <span class="caret"></span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a  class="nav-link   text-white" href="{{ route('autok.index') }}" >
+                <li class="nav-item pl-2 pr-2">
+                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('autok.index') }}" >
                         {{__('Járművek')}} <span class="caret"></span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a  class="nav-link   text-white" href="{{ route('munkalapok.index') }}" >
+                <li class="nav-item pl-2 pr-2">
+                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('munkalapok.index') }}" >
                         {{__('Munkalapok')}} <span class="caret"></span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a  class="nav-link   text-white" href="{{ route('hibak.index') }}" >
+                <li class="nav-item pl-2 pr-2">
+                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('hibak.index') }}" >
                         {{__('Hibák')}} <span class="caret"></span>
+                    </a>
+                </li>
+                <li class="nav-item pl-2 pr-2">
+                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('ertesitesek.index') }}" >
+                        {{__('Értesítések')}} <span class="caret"></span>
                     </a>
                 </li>
 

@@ -11,7 +11,7 @@
     <nav aria-label="breadcrumb text-monospace">
         <ol class="breadcrumb bg-primary">
             <li class="breadcrumb-item "><a class="text-decoration-none text-white lg-text"  href="{{route('home')}}">Főoldal</a></li>
-            <li class="breadcrumb-item"><a class="text-decoration-none text-white lg-text" href="{{route('munkalapok.index')}}">Munkalapok</a></li>
+            <li class="breadcrumb-item"><a class="text-decoration-none text-white lg-text" href="{{route('ertesitesek.index')}}">Értesítések</a></li>
             <li class="breadcrumb-item active lg-text text-white"
                 aria-current="page">{!! (!empty($model)?'Módosítás: <strong class="text-danger">' . $model['azonosito'] . '</strong>' :'Létrehozás')!!}</li>
         </ol>
@@ -26,64 +26,22 @@
     @endif
     <div class="card m-2 ">
 
-        <div class="card-header blue-gradient text-white">Munkalap rögzítés</div>
+        <div class="card-header blue-gradient text-white">Értesítés rögzítés</div>
         <!--Card content-->
         <div class="card-body px-lg-5 pt-0">
 
             <!-- Form -->
-            <form class="text-center" style="color: #757575;" action="{{route('munkalapok.store')}}" method="POST">
+            <form class="text-center" style="color: #757575;" action="{{route('ertesitesek.store')}}" method="POST">
                 @if(!empty($model))
                     <input type="hidden" value="modositas" name="store_method">
                     <input type="hidden" value="{{$model['azonosito']}}" name="azonosito">
                     @else
                     <input type="hidden" value="mentes" name="store_method">
                     @endif
-                @if(!empty($hiba))
-                        <input type="hidden" value="{{$hiba->azonosito}}" name="hiba_id">
-                    @endif
             @csrf
                 <div class="form-row">
-                    <div class="col-3">
-                        <!-- First name -->
-                        <div class="md-form">
-                            <input type="text" id="nev" name="nev"  required class="form-control"     @if(empty($model))
-                            value="{{ old('nev') }}"
-                                   @else
-                                   value="{{ $model['nev'] }}"
-                                @endif>
-                            <label for="rendszam" class="active"><strong class="text-danger">*</strong> Rövid leírás</label>
-                            @if ($errors->has('nev'))
-                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('nev') }}
 
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
                     <div class="col-3">
-                        <!-- First name -->
-                        <div class="md-form">
-                            <input type="text" id="ar" name="ar"  required class="form-control"     @if(empty($model))
-                            value="{{ old('ar') }}"
-                                   @else
-                                   value="{{ $model['ar'] }}"
-                                @endif>
-                            <label for="rendszam" class="active"><strong class="text-danger">*</strong>Nettó Ár</label>
-                            @if ($errors->has('ar'))
-                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('ar') }}
-
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-2">
 
                         <div class="md-form">
 
@@ -91,19 +49,15 @@
                                 <option value="-1"></option>
                                 @foreach($select as $item)
                                     <option value="{{$item['azonosito']}}"
-                                    @if(!empty($hiba))
-                                        {!! $item['azonosito']==$hiba->auto_azonosito?'selected':'' !!}
-                                        @else
                                     @if(empty($model))
                                         {!! old('auto_azonosito')==$item['azonosito']?'selected':'' !!}
                                         @else
                                         {!! $model['auto_azonosito']==$item['azonosito']?'selected':'' !!}
                                         @endif
-                                        @endif
                                     >{{$item['marka']}} {{$item['tipus']}} ({{$item['rendszam']}})</option>
                                 @endforeach
                             </select>
-                            <label for="auto_azonosito" class="{!! !empty($model['auto_azonosito'])?'active':'' !!} {!! !empty($hiba)?'active':'' !!}"><strong class="text-danger">*</strong> Jármű</label>
+                            <label for="auto_azonosito" class="{!! !empty($model['auto_azonosito'])?'active':'' !!}"><strong class="text-danger">*</strong> Jármű</label>
                             @if ($errors->has('auto_azonosito'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong>Hiba!</strong> {{ $errors->first('auto_azonosito') }}
@@ -115,49 +69,15 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-2" id="hibajegy">
-
+                    <div class="col-3">
                         <div class="md-form">
-
-                            <select id="hiba_id"  disabled  name="hiba_id" onchange="onchangeselect('hiba_id')" class="form-control select donttouch">
-
-                                @if(!empty($hiba))
-                                    <option value="{{$hiba->azonosito}}" selected >Hibajegy azonosító: {{$hiba->azonosito}}</option>
-                                @else
-                                    @if(!empty($model))
-                                        <option value="{{$model['hiba_id']}}" selected >Hibajegy azonosító: {{$model['hiba_id']}}</option>
-                                    @else
-                                <option value="-1"></option>
-                                    @foreach($select as $item)
-                                        <option value="{{$item['azonosito']}}"
-                                            {!! old('hiba_id')==$item['azonosito']?'selected':'' !!}
-                                        >Hibajegy azonosító: {{$item['azonosito']}} @ </option>
-                                    @endforeach
-                                    @endif
-                                @endif
-                            </select>
-                            <label for="auto_azonosito" class="{!! !empty($model['hiba_id'])?'active':'' !!} {!! !empty($hiba)?'active':'' !!}"> Hibajegy</label>
-                            @if ($errors->has('hiba_id'))
-                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('hiba_id') }}
-
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <!-- First name -->
-                        <div class="md-form">
-                            <input type="date" id="created_at" name="created_at"   class="form-control"     @if(empty($model))
-                            value="{{ old('created_at') }}"
+                            <input type="text" id="nev" name="nev"  required  class="form-control"     @if(empty($model))
+                            value="{{ old('nev') }}"
                                    @else
-                                   value="{{ substr($model['created_at'], 0,10) }}"
+                                   value="{{ $model['nev'] }}"
                                 @endif>
-                            <label for="created_at" class="active"> Elvégezve</label>
-                            @if ($errors->has('created_at'))
+                            <label for="created_at" class="active"><strong class="text-danger">*</strong> Értesítés neve</label>
+                            @if ($errors->has('nev'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong>Hiba!</strong> {{ $errors->first('created_at') }}
 
@@ -187,14 +107,18 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-12">
-                        <!-- First name -->
+
+                    <div class="col-3">
                         <div class="md-form">
-                            <textarea type="text" id="leiras" name="leiras" rows="8" class="form-control">@if(empty($model)){{ old('leiras')}}@else{{ $model['leiras']}}@endif</textarea>
-                            <label for="leiras" class="active active2">Leírás</label>
-                            @if ($errors->has('leiras'))
+                            <input type="text" id="gyakorisag" name="gyakorisag" required class="form-control"     @if(empty($model))
+                            value="{{ old('gyakorisag') }}"
+                                   @else
+                                   value="{{ $model['gyakorisag'] }}"
+                                @endif>
+                            <label for="created_at" class="active"><strong class="text-danger">*</strong> Gyakoriság (Km)</label>
+                            @if ($errors->has('gyakorisag'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('leiras') }}
+                                    <strong>Hiba!</strong> {{ $errors->first('gyakorisag') }}
 
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -203,6 +127,27 @@
                             @endif
                         </div>
                     </div>
+
+                    <div class="col-12">
+                        <div class="md-form">
+                            <input type="text" id="cimzettek" name="cimzettek" required   class="form-control"     @if(empty($model))
+                            value="{{ old('cimzettek') }}"
+                                   @else
+                                   value="{{ $model['cimzettek'] }}"
+                                @endif>
+                            <label for="created_at" class="active"><strong class="text-danger">*</strong> Címzettek <strong class="text-danger">(E-mail címek ponto vessővel ( ; ) elválasztva!)</strong></label>
+                            @if ($errors->has('cimzettek'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('cimzettek') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
 
                     <div class="offset-10">
                         @if(empty($model))
@@ -227,7 +172,6 @@
 
 @section('extra_js')
     <script>
-        //hibajegy
         function select(elem){
             if($('#'+elem).val()!=-1)
             {
@@ -236,23 +180,12 @@
                 $('#'+elem).siblings("label").removeClass('active');
             }
             $.ajax({
-                url: "{{route('munkalapok.selecthibajegy')}}",
-                method: 'POST',
-                data: { auto_azonosito: $('#'+elem).val(), _token: "{{csrf_token()}}"},
-                context: document.body
-            }).done(function (data) {
-                $('#hibajegy').html(data);
-                $('#hiba_id').removeAttr('disabled');
-                $('#hiba_id').removeClass('donttouch');
-            });
-
-            $.ajax({
                 url: "{{route('ertesitesek.minkm')}}",
                 method: 'POST',
                 data: { auto_azonosito: $('#'+elem).val(), _token: "{{csrf_token()}}"},
                 dataType: "json",
                 success: function (data) {
-                    $(".km").text("( Minimum: "+ data.km + " )  ");
+                   $(".km").text("( Minimum: "+ data.km + " )  ");
                 }
             }).done(function (data) {
                 console.log(data);

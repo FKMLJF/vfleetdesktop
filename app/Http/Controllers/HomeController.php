@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autok;
+use App\Models\Ertesitesek;
 use App\Models\Fajlok;
 use App\Models\Felhasznalok;
 use App\Models\Hibajegy;
@@ -54,17 +55,9 @@ class HomeController extends Controller
         $carcnt = Autok::where('rejtett', '0')->whereRaw(  " (user_id IN (Select id from users where root_user=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->count() . ' db';
         $munkalapcnt = Munkalapok::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
         $hibacnt = HibakView::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
-        /* $servicetcnt = SzolgaltatasTorzs::all()->count() . ' db';
-         $customercnt = Ugyfelek::all()->count() . ' db';
-         $templatecnt = Fajlok::all()->count() . ' db';
-         $termcnt = Termenyek::all()->count() . ' db';
-         $kintlevoseg = DB::select("SELECT sum(fizetve) as tartozas FROM ugyfel_szolgaltatas_torzs WHERE teljesitve = 1 and YEAR(mikor) = YEAR(now())")[0]->tartozas;
-         $servicecnt =DB::select("SELECT sum(nettoosszeg) as osszeg FROM `ugyfel_szolgaltatas_torzs` WHERE YEAR(mikor) = YEAR(now())")[0]->osszeg;
-         $servicecnt =DB::select("SELECT sum(nettoosszeg) as osszeg FROM `ugyfel_szolgaltatas_torzs` WHERE YEAR(mikor) = YEAR(now())")[0]->osszeg;
-         $fizetve =  "Fizetettség: ".number_format((($kintlevoseg/$servicecnt)*100),2,",","")." %";
-         $kintlevoseg = "Fizetve: ".number_format($kintlevoseg,0,".", " "). " Ft";
-         $servicecnt = "Összesen: ".number_format($servicecnt,0,".", " "). " Ft";*/
-        return json_encode(array($usercnt,$carcnt,$munkalapcnt,$hibacnt/*, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve*/));
+        $ertcnt = Ertesitesek::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+
+        return json_encode(array($usercnt,$carcnt,$munkalapcnt,$hibacnt,$ertcnt/*, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve*/));
     }
 
 

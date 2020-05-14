@@ -4,25 +4,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autok;
+use App\Models\Ertesitesek;
 use App\Models\Futasteljesitmeny;
-use App\Models\Hibajegy;
 use App\User;
-use App\ViewModels\HibakView;
-use App\ViewModels\InputAnyagok;
+use App\ViewModels\ErtesitesekView;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Mail;
 
 /**
- * Class hibakTorzsController
+ * Class ertesitesekTorzsController
  * @package App\Http\Controllers
  */
-class HibakController
+class ErtesitesekController
 {
     public function index()
     {
-        return view('hibak.index');
+        return view('ertesitesek.index');
     }
 
     /**
@@ -30,13 +30,26 @@ class HibakController
      */
     public function indexData(Request $request)
     {
+        $data = array(
+            'title'=>"VFleet Értesítés",
+            'ertesites' => 'Olajcsere',
+            "auto" => 'Mercedel ML 500 (KL-426) ',
+            "km_ora" => '12 313 KM'
+        );
+
+        Mail::send('mail', ['data' => $data], function($message) {
+            $message->to('jozsijo94@gmail.com', 'Értesítés')->subject
+            ('VFleet Értesítés');
+            $message->from('vfleetpostafleetposta@gmail.com','VFleet');
+        });
+
         //(array)User::where('root_user', '=', \Auth::id())->get('id')
-        $model = HibakView::query();
+        $model = ErtesitesekView::query();
         return DataTables::eloquent($model)
             ->addIndexColumn()
             ->filter(function ($query) {
-                if (request()->has('leiras')) {
-                    $query->where('leiras', 'like', "%" . request('leiras') . "%");
+                if (request()->has('nev')) {
+                    $query->where('nev', 'like', "%" . request('nev') . "%");
                 }
                 if (request()->has('auto_azonosito')) {
                     $query->where('auto_azonosito', 'like', "%" . request('auto_azonosito') . "%");
@@ -50,22 +63,24 @@ class HibakController
     public function create()
     {
         $select = Autok::whereRaw(" rejtett = 0 and ( user_id IN (Select id from users where root_user=?) or user_id = ? )", [\Auth::id(), \Auth::id()])->get()->toArray();
-        return view('hibak.formview', compact('select'));
+        return view('ertesitesek.formview', compact('select'));
     }
 
     public function update($azonosito)
     {
         $select = Autok::whereRaw(" rejtett = 0 and ( user_id IN (Select id from users where root_user=?) or user_id = ? )", [\Auth::id(), \Auth::id()])->get()->toArray();
-        $model = (array)DB::table('hibajegy')->where("azonosito", $azonosito)->get()->first();
-        return view('hibak.formview', compact("model", "azonosito", "select"));
+        $model = (array)DB::table('ertesitesek')->where("azonosito", $azonosito)->get()->first();
+        return view('ertesitesek.formview', compact("model", "azonosito", "select"));
     }
 
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'leiras' => 'required',
-            'auto_azonosito' => 'required|numeric',
+            'nev' => 'required',
             'km_ora' => 'required|numeric',
+            'gyakorisag' => 'required|numeric',
+            'cimzettek' => 'required',
+            'auto_azonosito' => 'required|numeric',
         ]);
         $method = $request->post("store_method");
         // dd($request->post());
@@ -85,33 +100,36 @@ class HibakController
 
         if ($validator->fails()) {
             if ($method == "mentes") {
-                return redirect('hibak/create')
+                return redirect('ertesitesek/create')
                     ->withErrors($validator)
                     ->withInput($request->input());
             } else if ($method == "modositas") {
-                return redirect('hibak/szerkesztes/' . $request->post('azonosito'))
+                return redirect('ertesitesek/szerkesztes/' . $request->post('azonosito'))
                     ->withErrors($validator)
                     ->withInput($request->input());
             }
         }
 
         if ($method == "mentes") {
-            $ia = new Hibajegy();
-            $ia->leiras = $request->post('leiras');
+            $ia = new Ertesitesek();
+            $ia->nev = $request->post('nev');
+            $ia->gyakorisag = $request->post('gyakorisag');
             $ia->km_ora = $request->post('km_ora');
-            $ia->created_at = $request->post('created_at');
             $ia->auto_azonosito = $request->post('auto_azonosito');
+            $ia->cimzettek = $request->post('cimzettek');
             $ia->user_id = \Auth::id();
             $ia->save();
-            return Redirect::to('hibak/create')->with('success', 'Sikeres rögzítés!');
+            return Redirect::to('ertesitesek/create')->with('success', 'Sikeres rögzítés!');
         } else if ($method == "modositas") {
-            DB::table('hibajegy')->where('azonosito', $request->post('azonosito'))->update(array(
-                "leiras" => $request->post('leiras'),
-                "created_at" => $request->post('created_at'),
+            DB::table('ertesitesek')->where('azonosito', $request->post('azonosito'))->update(array(
+                "nev" => $request->post('nev'),
+                "gyakorisag" => $request->post('gyakorisag'),
+                "km_ora" => $request->post('km_ora'),
+                "cimzettek" => $request->post('cimzettek'),
                 "auto_azonosito" => $request->post('auto_azonosito'),
                 "user_id" => \Auth::id()
             ));
-            return Redirect::to("hibak/szerkesztes/" . $request->post('azonosito'))->with('success', 'Sikeres módosítás!');
+            return Redirect::to("ertesitesek/szerkesztes/" . $request->post('azonosito'))->with('success', 'Sikeres módosítás!');
         }
 
 
@@ -119,17 +137,22 @@ class HibakController
 
     public function visible(Request $r)
     {
-        $hibak = hibak::where('azonosito', $r->post('id'))->first();
-        if (!empty($hibak)) {
-            $hibak->rejtett = ($r->post('checked') == "true") ? 1 : 0;
-            $hibak->save();
+        $ertesitesek = Ertesitesek::where('azonosito', $r->post('id'))->first();
+        if (!empty($ertesitesek)) {
+            $ertesitesek->rejtett = ($r->post('checked') == "true") ? 1 : 0;
+            $ertesitesek->save();
         }
 
     }
 
     public function delete(Request $request)
     {
-        return DB::table('hibajegy')->where('azonosito', $request->post('azonosito'))->delete();
+        return DB::table('ertesitesek')->where('azonosito', $request->post('azonosito'))->delete();
+    }
+
+    public function minkm(Request $request)
+    {
+        return json_encode(array('km' => number_format(Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora'), 0, ".", " ") . " Km"));
     }
 
 }

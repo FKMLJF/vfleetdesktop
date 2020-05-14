@@ -120,6 +120,8 @@ Route::middleware(['auth','2fa' ])->group(function () {
 
             Route::get('szerkesztes/{azonosito}', 'MunkalapokController@update')->name('szerkesztes')->where(array('azonosito' => '[0-9]+'));
 
+            Route::get('javitas/hiba/{azonosito}', 'MunkalapokController@javitas')->name('javitas')->where(array('azonosito' => '[0-9]+'));
+
             Route::post('store', 'MunkalapokController@store')->name('store');
 
             /**AJAX*/
@@ -157,5 +159,29 @@ Route::middleware(['auth','2fa' ])->group(function () {
             Route::post('visible', 'HibakController@visible')->name('visible');
 
             Route::post('delete', 'HibakController@delete')->name('delete');
+        });
+
+
+    Route::as('ertesitesek.')
+        ->prefix('ertesitesek')
+        ->group(function () {
+
+            Route::get('index', 'ErtesitesekController@index')->name('index');
+
+            Route::get('create', 'ErtesitesekController@create')->name('create');
+
+            Route::get('szerkesztes/{azonosito}', 'ErtesitesekController@update')->name('szerkesztes')->where(array('azonosito' => '[0-9]+'));
+
+            Route::post('store', 'ErtesitesekController@store')->name('store');
+
+            /**AJAX*/
+
+            Route::get('indexdata', 'ErtesitesekController@indexData')->name('indexdata');
+
+            Route::post('visible', 'ErtesitesekController@visible')->name('visible');
+
+            Route::post('delete', 'ErtesitesekController@delete')->name('delete');
+
+            Route::post('minkm', 'ErtesitesekController@minkm')->name('minkm');
         });
 });

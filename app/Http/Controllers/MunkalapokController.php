@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autok;
+use App\Models\Futasteljesitmeny;
 use App\Models\Hibajegy;
 use App\Models\munkalapok;
 use App\User;
@@ -64,17 +65,33 @@ class MunkalapokController
         return view('munkalapok.formview', compact("model", "azonosito","select", "select2"));
     }
 
+    public function javitas($azonosito)
+    {
+        $select = Autok::whereRaw(  " rejtett = 0 and (user_id IN (Select id from users where root_user=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->get()->toArray();
+        $hiba = DB::table('hibajegy')->where("azonosito", $azonosito)->first();
+        $select2 = Hibajegy::whereRaw(  " javitva = 0 and auto_azonosito = ? ",[$hiba->auto_azonosito])->get()->toArray();
+        return view('munkalapok.formview', compact("hiba", "azonosito","select", "select2"));
+    }
+
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
             'nev' => 'required',
             'ar' => 'required|numeric',
+            'km_ora' => 'required|numeric',
             'auto_azonosito' => 'required|numeric',
         ]);
         $method = $request->post("store_method");
         // dd($request->post());
 
         $validator->after(function ($validator) use ($request, $method) {
+            if ($method == 'mentes') {
+            $minkm= Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora');
+            if(floatval($request->post('km_ora')) < floatval($minkm))
+            {
+                $validator->errors()->add('km_ora', 'Nem lehet kisebb mint az elöző kmóra állás!');
+            }
+                }
             if ($request->post('auto_azonosito') == -1) {
                 $validator->errors()->add('auto_azonosito', "A(z) " . $request->post('auto_azonosito') . " kötelező !");
             }
@@ -97,6 +114,7 @@ class MunkalapokController
             $ia = new munkalapok();
             $ia->nev = $request->post('nev');
             $ia->ar = $request->post('ar');
+            $ia->km_ora = $request->post('km_ora');
             $ia->leiras = $request->post('leiras');
             $ia->created_at = $request->post('created_at');
             $ia->auto_azonosito = $request->post('auto_azonosito');

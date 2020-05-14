@@ -45,7 +45,7 @@
 
                         <div class="md-form">
 
-                            <select id="auto_azonosito"  name="auto_azonosito" onchange="onchangeselect('auto_azonosito')" class="form-control select">
+                            <select id="auto_azonosito"  name="auto_azonosito" onchange="select('auto_azonosito')" class="form-control select">
                                 <option value="-1"></option>
                                 @foreach($select as $item)
                                     <option value="{{$item['azonosito']}}"
@@ -61,6 +61,25 @@
                             @if ($errors->has('auto_azonosito'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong>Hiba!</strong> {{ $errors->first('auto_azonosito') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="md-form">
+                            <input type="number" id="km_ora" name="km_ora" required  class="form-control"     @if(empty($model))
+                            value="{{ old('km_ora') }}"
+                                   @else
+                                   value="{{ $model['km_ora'] }}" readonly
+                                @endif>
+                            <label for="created_at" class="active"><strong class="text-danger">*</strong>Km óra <i class="km pl-2 pt-2"></i></label>
+                            @if ($errors->has('km_ora'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('km_ora') }}
 
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -129,6 +148,26 @@
 
 @section('extra_js')
     <script>
+        function select(elem){
+            if($('#'+elem).val()!=-1)
+            {
+                $('#'+elem).siblings("label").addClass('active');
+            }else{
+                $('#'+elem).siblings("label").removeClass('active');
+            }
+
+            $.ajax({
+                url: "{{route('ertesitesek.minkm')}}",
+                method: 'POST',
+                data: { auto_azonosito: $('#'+elem).val(), _token: "{{csrf_token()}}"},
+                dataType: "json",
+                success: function (data) {
+                    $(".km").text("( Minimum: "+ data.km + " )  ");
+                }
+            }).done(function (data) {
+                console.log(data);
+            });
+        }
         function onchangeselect(elem){
             if($('#'+elem).val()!=-1)
             {

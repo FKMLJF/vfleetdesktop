@@ -51,11 +51,10 @@
 
 
         <div class="col-3 p-4">
-            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" onclick="document.location.href='{{route('munkalapok.index')}}'">
+            <div class="rounded blue-gradient waves-effect" style="cursor: pointer" onclick="document.location.href='{{route('ertesitesek.index')}}'">
                 <div class=" text-center p-2" style="position: relative">
-                    <p class="p-2" style="font-size: 25px">Emlékeztetők</p>
-                    <span style="font-size: 20px">12 db</span>
-                    {{-- <span id="usercnt"><i class="fas fa-spinner fa-pulse"></i></span> --}}
+                    <p class="p-2" style="font-size: 25px">Értesítések</p>
+                     <span id="ertcnt" style="font-size: 25px"><i class="fas fa-spinner fa-pulse"></i></span>
                     <i class="fas fa-bookmark" style="position: absolute;bottom: 20px;right: 20px;font-size: 70px;opacity: 0.3;"></i>
                 </div>
             </div>
@@ -92,6 +91,7 @@
                 $('#carcnt').text(data[1]);
                 $('#munkalapcnt').text(data[2]);
                 $('#errorcnt').text(data[3]);
+                $('#ertcnt').text(data[4]);
                 /*$('#inpcnt').text(data[1]);
                 $('#servicecnt').text(data[3]);
                 $('#servicetcnt').text(data[4]);

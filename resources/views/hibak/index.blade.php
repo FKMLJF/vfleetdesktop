@@ -79,6 +79,7 @@
                     },
                     responsive: true,
                     lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Összes"]],
+                    pageLength: 50,
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, visible: false},
                         {data: 'azonosito', name: 'azonosito'},
@@ -120,6 +121,14 @@
                             action: function () {
                                 if(azonosito == null) return -1;
                                 document.location.href = "{{url('/hibak/szerkesztes/')}}/"+azonosito;
+                            }
+                        },
+                        {
+                            text: '<i class="fa fa-wrench text-white" style="font-size: 16px" aria-hidden="true" title="Hiba javitás"></i>',
+                            className: 'modositas-btn blue-gradient waves-effect',
+                            action: function () {
+                                if(azonosito == null) return -1;
+                                document.location.href = "{{url('/munkalapok/javitas/hiba/')}}/"+azonosito;
                             }
                         },
                         {
