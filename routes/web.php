@@ -183,5 +183,7 @@ Route::middleware(['auth','2fa' ])->group(function () {
             Route::post('delete', 'ErtesitesekController@delete')->name('delete');
 
             Route::post('minkm', 'ErtesitesekController@minkm')->name('minkm');
+
+            Route::post('sendmail', 'MailSenderController@sendmail')->name('sendmail');
         });
 });

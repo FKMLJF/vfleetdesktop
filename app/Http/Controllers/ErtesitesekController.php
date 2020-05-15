@@ -28,20 +28,21 @@ class ErtesitesekController
     /**
      * @return mixed
      */
-    public function indexData(Request $request)
+    public
+    function indexData(Request $request)
     {
-        $data = array(
-            'title'=>"VFleet Értesítés",
-            'ertesites' => 'Olajcsere',
-            "auto" => 'Mercedel ML 500 (KL-426) ',
-            "km_ora" => '12 313 KM'
-        );
+        /* $data = array(
+             'title'=>"VFleet Értesítés",
+             'ertesites' => 'Olajcsere',
+             "auto" => 'Mercedel ML 500 (KL-426) ',
+             "km_ora" => '12 313 KM'
+         );
 
-        Mail::send('mail', ['data' => $data], function($message) {
-            $message->to('jozsijo94@gmail.com', 'Értesítés')->subject
-            ('VFleet Értesítés');
-            $message->from('vfleetpostafleetposta@gmail.com','VFleet');
-        });
+         Mail::send('mail', ['data' => $data], function($message) {
+             $message->to('jozsijo94@gmail.com', 'Értesítés')->subject
+             ('VFleet Értesítés');
+             $message->from('vfleetpostafleetposta@gmail.com','VFleet');
+         });*/
 
         //(array)User::where('root_user', '=', \Auth::id())->get('id')
         $model = ErtesitesekView::query();
@@ -60,20 +61,23 @@ class ErtesitesekController
             ->toJson();
     }
 
-    public function create()
+    public
+    function create()
     {
         $select = Autok::whereRaw(" rejtett = 0 and ( user_id IN (Select id from users where root_user=?) or user_id = ? )", [\Auth::id(), \Auth::id()])->get()->toArray();
         return view('ertesitesek.formview', compact('select'));
     }
 
-    public function update($azonosito)
+    public
+    function update($azonosito)
     {
         $select = Autok::whereRaw(" rejtett = 0 and ( user_id IN (Select id from users where root_user=?) or user_id = ? )", [\Auth::id(), \Auth::id()])->get()->toArray();
         $model = (array)DB::table('ertesitesek')->where("azonosito", $azonosito)->get()->first();
         return view('ertesitesek.formview', compact("model", "azonosito", "select"));
     }
 
-    public function store(Request $request)
+    public
+    function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
             'nev' => 'required',
@@ -116,6 +120,7 @@ class ErtesitesekController
             $ia->gyakorisag = $request->post('gyakorisag');
             $ia->km_ora = $request->post('km_ora');
             $ia->auto_azonosito = $request->post('auto_azonosito');
+            $ia->utoljarakm = intval($ia->km_ora) + intval($ia->gyakorisag);
             $ia->cimzettek = $request->post('cimzettek');
             $ia->user_id = \Auth::id();
             $ia->save();
@@ -125,6 +130,7 @@ class ErtesitesekController
                 "nev" => $request->post('nev'),
                 "gyakorisag" => $request->post('gyakorisag'),
                 "km_ora" => $request->post('km_ora'),
+                "utoljarakm" => intval($request->post('km_ora')) + intval($request->post('gyakorisag')),
                 "cimzettek" => $request->post('cimzettek'),
                 "auto_azonosito" => $request->post('auto_azonosito'),
                 "user_id" => \Auth::id()
@@ -135,7 +141,8 @@ class ErtesitesekController
 
     }
 
-    public function visible(Request $r)
+    public
+    function visible(Request $r)
     {
         $ertesitesek = Ertesitesek::where('azonosito', $r->post('id'))->first();
         if (!empty($ertesitesek)) {
@@ -145,12 +152,14 @@ class ErtesitesekController
 
     }
 
-    public function delete(Request $request)
+    public
+    function delete(Request $request)
     {
         return DB::table('ertesitesek')->where('azonosito', $request->post('azonosito'))->delete();
     }
 
-    public function minkm(Request $request)
+    public
+    function minkm(Request $request)
     {
         return json_encode(array('km' => number_format(Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora'), 0, ".", " ") . " Km"));
     }

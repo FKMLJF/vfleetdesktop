@@ -85,5 +85,20 @@
 
 @yield('extra_js')
 
+@if (!empty(session('google2fa', null)))
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "{{route('ertesitesek.sendmail')}}",
+                method: 'POST',
+                data: { _token: "{{csrf_token()}}"},
+                dataType: "json",
+                success: function (data) {
+                   console.info(data.success);
+                }
+            });
+        })
+    </script>
+@endif
 </body>
 </html>
