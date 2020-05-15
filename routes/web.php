@@ -161,6 +161,27 @@ Route::middleware(['auth','2fa' ])->group(function () {
             Route::post('delete', 'HibakController@delete')->name('delete');
         });
 
+    Route::as('dokumentumok.')
+        ->prefix('dokumentumok')
+        ->group(function () {
+
+            Route::get('index', 'DokumentumokController@index')->name('index');
+
+            Route::get('create', 'DokumentumokController@create')->name('create');
+
+            Route::get('szerkesztes/{azonosito}', 'DokumentumokController@update')->name('szerkesztes')->where(array('azonosito' => '[0-9]+'));
+
+            Route::post('store', 'DokumentumokController@store')->name('store');
+
+            /**AJAX*/
+
+            Route::get('indexdata', 'DokumentumokController@indexData')->name('indexdata');
+
+            Route::post('visible', 'DokumentumokController@visible')->name('visible');
+
+            Route::post('delete', 'DokumentumokController@delete')->name('delete');
+        });
+
 
     Route::as('ertesitesek.')
         ->prefix('ertesitesek')

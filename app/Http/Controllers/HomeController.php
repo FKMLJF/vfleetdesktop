@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autok;
+use App\Models\Dokumentumok;
 use App\Models\Ertesitesek;
 use App\Models\Fajlok;
 use App\Models\Felhasznalok;
@@ -56,8 +57,9 @@ class HomeController extends Controller
         $munkalapcnt = Munkalapok::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
         $hibacnt = HibakView::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
         $ertcnt = Ertesitesek::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $doccnt = Dokumentumok::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
 
-        return json_encode(array($usercnt,$carcnt,$munkalapcnt,$hibacnt,$ertcnt/*, $inpcnt, $customercnt, $servicecnt,$servicetcnt,$templatecnt,$termcnt,$kintlevoseg, $fizetve*/));
+        return json_encode(array($usercnt,$carcnt,$munkalapcnt,$hibacnt,$ertcnt,$doccnt));
     }
 
 

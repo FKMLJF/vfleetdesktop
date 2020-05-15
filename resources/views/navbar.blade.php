@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md bg-primary text-white shadow-sm p-2">
     <div class="container-fluid" style="background-image: url(/public/image/logo.png);  background-repeat: no-repeat; background-size: contain;">
-        <a class="navbar-brand pl-4  text-white waves-effect" href="{{ url('/') }}" >
-            VFleet
+        <a class="navbar-brand pl-4" href="{{ url('/') }}" >
+           <img class=" waves-effect" style="width: 70px" src="{{asset('/images/vfleet.png')}}">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -12,28 +12,33 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item pl-2 pr-2">
-                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('felhasznalok.index') }}" >
+                    <a  class="nav-link   text-white"  href="{{ route('felhasznalok.index') }}" >
                         {{__('Felhasználók')}} <span class="caret"></span>
                     </a>
                 </li>
                 <li class="nav-item pl-2 pr-2">
-                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('autok.index') }}" >
+                    <a  class="nav-link   text-white"  href="{{ route('autok.index') }}" >
                         {{__('Járművek')}} <span class="caret"></span>
                     </a>
                 </li>
                 <li class="nav-item pl-2 pr-2">
-                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('munkalapok.index') }}" >
+                    <a  class="nav-link   text-white"  href="{{ route('munkalapok.index') }}" >
                         {{__('Munkalapok')}} <span class="caret"></span>
                     </a>
                 </li>
                 <li class="nav-item pl-2 pr-2">
-                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('hibak.index') }}" >
+                    <a  class="nav-link   text-white"  href="{{ route('hibak.index') }}" >
                         {{__('Hibák')}} <span class="caret"></span>
                     </a>
                 </li>
                 <li class="nav-item pl-2 pr-2">
-                    <a  class="nav-link   text-white" style="font-size: 20px" href="{{ route('ertesitesek.index') }}" >
+                    <a  class="nav-link   text-white"  href="{{ route('ertesitesek.index') }}" >
                         {{__('Értesítések')}} <span class="caret"></span>
+                    </a>
+                </li>
+                <li class="nav-item pl-2 pr-2">
+                    <a  class="nav-link   text-white"  href="{{ route('dokumentumok.index') }}" >
+                        {{__('Dokumentumok')}} <span class="caret"></span>
                     </a>
                 </li>
 
@@ -69,23 +74,22 @@
                         </li>
                     @endif
                 @else
-                    <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white waves-effect" href="#" role="button"
+                    <li class="nav-item ">
+                        <a id="navbarDropdown" class="nav-link  text-white waves-effect" href="#" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
-
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item " href="{{ route('logout') }}"
+                    </li>
+                    <li class="nav-item ">
+                            <a class="nav-link  text-white waves-effect" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                {{ __('Kilépés') }}
+                                <i class="fas fa-sign-out-alt"></i>
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
-                        </div>
                     </li>
                 @endguest
             </ul>

@@ -107,3 +107,29 @@ label.active2 {
 .donttouch{
     cursor: not-allowed;
 }
+
+.nav-link{
+    font-size: 20px;
+}
+
+.wfleet-bottom{
+    width: 90px;
+    position: absolute;
+    right: 35px;
+    bottom: 35px;
+}
+
+.wfleet-bottom:hover{
+    -webkit-transform: translateX(10px) scale(1.15);
+    transform: translateX(10px) scale(1.15);
+    right: 40px;
+    bottom: 40px;
+}
+
+.rounded{
+    border-radius: 5px !important;
+}
+
+.rounded:hover{
+    transform: scale(1.02, 1.02);
+}
