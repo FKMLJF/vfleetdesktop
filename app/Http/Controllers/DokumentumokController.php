@@ -102,6 +102,8 @@ class DokumentumokController
             $ia->auto_azonosito = $request->post('auto_azonosito');
             $ia->leiras = $request->post('leiras');
             $ia->netto_ar = $request->post('netto_ar');
+            $ia->ertesites_nap = $request->post('ertesites_nap');
+            $ia->cimzettek = $request->post('cimzettek');
             $ia->user_id = \Auth::id();
             $ia->save();
             return Redirect::to('dokumentumok/create')->with('success', 'Sikeres rögzítés!');
@@ -113,6 +115,8 @@ class DokumentumokController
                 "auto_azonosito" => $request->post('auto_azonosito'),
                 "leiras" => $request->post('leiras'),
                 "netto_ar" => $request->post('netto_ar'),
+                "ertesites_nap" => $request->post('ertesites_nap'),
+                "cimzettek" => $request->post('cimzettek'),
                 "user_id" => \Auth::id()
             ));
             return Redirect::to("dokumentumok/szerkesztes/" . $request->post('azonosito'))->with('success', 'Sikeres módosítás!');

@@ -52,8 +52,8 @@
             </button>
         </div>
     @endif
-    <nav aria-label="breadcrumb bg-primary text-white">
-        <ol class="breadcrumb">
+    <nav aria-label="breadcrumb ">
+        <ol class="breadcrumb bg-primary text-white">
             <li class="breadcrumb-item "><a class="text-decoration-none lg-text" href="{{route('home')}}">Főoldal</a>
             </li>
             <li class="breadcrumb-item active lg-text" aria-current="page">Felhasználók</li>

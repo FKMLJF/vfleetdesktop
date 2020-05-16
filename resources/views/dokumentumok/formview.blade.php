@@ -156,6 +156,44 @@
                             @endif
                         </div>
                     </div>
+                    <div class="col-3">
+                        <div class="md-form">
+                            <input type="number" id="ertesites_nap" name="ertesites_nap"   class="form-control"     @if(empty($model))
+                            value="{{ old('ertesites_nap') }}"
+                                   @else
+                                   value="{{ $model['ertesites_nap']}}"
+                                @endif>
+                            <label for="created_at" class="active"><strong class="text-danger">*</strong> Értesités nap</label>
+                            @if ($errors->has('ertesites_nap'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('ertesites_nap') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="md-form">
+                            <input type="text" id="cimzettek" name="cimzettek" required   class="form-control"     @if(empty($model))
+                            value="{{ old('cimzettek') }}"
+                                   @else
+                                   value="{{ $model['cimzettek'] }}"
+                                @endif>
+                            <label for="created_at" class="active"><strong class="text-danger">*</strong> Címzettek <strong class="text-danger">(E-mail címek ponto vessővel ( ; ) elválasztva!)</strong></label>
+                            @if ($errors->has('cimzettek'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('cimzettek') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                     <div class="col-12">
                         <!-- First name -->
                         <div class="md-form">
