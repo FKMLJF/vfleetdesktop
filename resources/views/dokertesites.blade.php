@@ -18,9 +18,8 @@
             font: normal 13px Arial, sans-serif;
         }
         .zui-table thead th {
-            background-color: #d3eaff;
             border: solid 1px #d3eaff;
-            color: #007bff;
+            color: white;
             padding: 10px;
             text-align: left;
             text-shadow: 1px 1px 1px #fff;
@@ -31,33 +30,43 @@
             padding: 10px;
             text-shadow: 1px 1px 1px #fff;
         }
-        h1{
+        h3{
             color: #0b51c5;
+            width: 100%;
         }
 
+        .bg{
+            color: white;
+            background: #007bff;
+        }
+
+        .text-danger{
+            color: red;
+        }
 
     </style>
 
 </head>
-<body style="background-image: radial-gradient(circle, #ffffff, #f8f8fd, #f1f2fc, #e7ecfa, #dde7f9);">
-<h1>Értesítés dokumentum lejártáról. <strong style="color: darkred">A "KGFB (kötelező gépjármű biztosítás)" dokumentum érvényessége 45 nap múlva lejár a HON-154 rendszámú járműnél!</strong></h1>
+<body >
+<h3>Értesítés dokumentum lejártáról.</h3>
+<span> A <strong class="text-danger">"{{$data['tipus']}}"</strong>  érvényessége  <strong class="text-danger">{{$data['nap']}}</strong> nap múlva lejár a <strong class="text-danger">{{$data['auto']}}</strong>  járműnél!</span>
 <table class="zui-table">
     <thead>
-    <tr>
-        <th>Dokumentum</th>
-        <th>Tól</th>
-        <th>Ig</th>
-        <th>Jármű</th>
-        <th>Ár</th>
+    <tr class="bg">
+        <th width="250">Dokumentum</th>
+        <th width="80">Tól</th>
+        <th width="80">Ig</th>
+        <th width="250">Jármű</th>
+        <th width="100">Ár</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>KGFB (kötelező gépjármű biztosítás)</td>
-        <td>2019-01-01</td>
-        <td>2020-01-01</td>
-        <td>Renault Thalia 1.4 RN (HON-154)</td>
-        <td>35 000 Ft</td>
+        <td>{{$data['tipus']}}</td>
+        <td>{{substr($data['tol'],0,10)}}</td>
+        <td>{{substr($data['ig'],0,10)}}</td>
+        <td>{{$data['auto']}}</td>
+        <td>{{$data['ar']}} Ft</td>
     </tr>
 
     </tbody>

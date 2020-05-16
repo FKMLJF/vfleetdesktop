@@ -53,10 +53,10 @@
         </div>
     @endif
     <nav aria-label="breadcrumb ">
-        <ol class="breadcrumb bg-primary text-white">
-            <li class="breadcrumb-item "><a class="text-decoration-none lg-text" href="{{route('home')}}">Főoldal</a>
+        <ol class="breadcrumb bg-primary">
+            <li class="breadcrumb-item "><a class="text-decoration-none  text-white lg-text" href="{{route('home')}}">Főoldal</a>
             </li>
-            <li class="breadcrumb-item active lg-text" aria-current="page">Felhasználók</li>
+            <li class="breadcrumb-item active lg-text  text-white" aria-current="page">Felhasználók</li>
         </ol>
     </nav>
     <div class="row p-2">

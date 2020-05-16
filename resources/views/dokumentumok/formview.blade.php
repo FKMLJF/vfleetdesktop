@@ -163,7 +163,7 @@
                                    @else
                                    value="{{ $model['ertesites_nap']}}"
                                 @endif>
-                            <label for="created_at" class="active"><strong class="text-danger">*</strong> Értesités nap</label>
+                            <label for="created_at" class="active"> Értesités nap</label>
                             @if ($errors->has('ertesites_nap'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong>Hiba!</strong> {{ $errors->first('ertesites_nap') }}
@@ -182,7 +182,7 @@
                                    @else
                                    value="{{ $model['cimzettek'] }}"
                                 @endif>
-                            <label for="created_at" class="active"><strong class="text-danger">*</strong> Címzettek <strong class="text-danger">(E-mail címek ponto vessővel ( ; ) elválasztva!)</strong></label>
+                            <label for="created_at" class="active"> Címzettek <strong class="text-danger">(E-mail címek ponto vessővel ( ; ) elválasztva!)</strong></label>
                             @if ($errors->has('cimzettek'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong>Hiba!</strong> {{ $errors->first('cimzettek') }}

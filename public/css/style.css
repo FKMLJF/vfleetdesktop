@@ -133,3 +133,10 @@ label.active2 {
 .rounded:hover{
     transform: scale(1.02, 1.02);
 }
+
+.dataTables_processing {
+    background: transparent!important;
+    opacity: 1!important;
+    box-shadow: none!important;
+    top: 38%!important;
+}

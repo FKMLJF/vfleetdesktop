@@ -7,7 +7,7 @@
     "sInfoThousands": " ",
     "sLengthMenu": "_MENU_ találat oldalanként",
     "sLoadingRecords": "Betöltés...",
-    "sProcessing": "Feldolgozás...",
+    "sProcessing": "<i class='fas fa-spinner fa-pulse text-white' style='font-size: 90px'>",
     "sSearch": "Keresés:",
     "sZeroRecords": "Nincs a keresésnek megfelelő találat",
     "oPaginate": {
