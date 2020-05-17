@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Autok;
+use App\Models\Licensz;
 use App\Models\SzerepkorKapcsolo;
 use App\Providers\RouteServiceProvider;
 use App\User;
@@ -119,6 +121,11 @@ class RegisterController extends Controller
         $google2fa = app('pragmarx.google2fa');
         if (!empty($request->input('withoutfa'))) {
 
+            $user = User::whereRaw(" id IN (Select id from users where root_user=?) or id = ? and tiltott = 0 ", [\Auth::id(), \Auth::id()])->count();
+            $licenscnt = Licensz::whereRaw(" root_user IN (Select id from users where root_user=?) or root_user = ? ", [\Auth::id(), \Auth::id()])->first();
+            if (intval($user) >= intval($licenscnt->felhasznalo)) {
+                return Redirect::to("felhasznalok/register")->with('error', 'Nincs elegendő felhasználó licensz, maximális licensz:'. $licenscnt->jarmu);
+            }
             User::create([
                 'name' => $request->input('nev'),
                 'username' => $request->input('nev'),
@@ -126,6 +133,7 @@ class RegisterController extends Controller
                 'password' => bcrypt($request->input('password')),
                 'api_token' => Uuid::uuid4()->toString(),
                 'google2fa_secret' => $google2fa->generateSecretKey(),
+                'root_user' => \Auth::id(),
             ]);
             if (!empty($request->input('withoutfa'))) {
             $szerepkor = new SzerepkorKapcsolo();

@@ -29,7 +29,15 @@
         <div class="card-header blue-gradient text-white">Járműlétrehozás</div>
         <!--Card content-->
         <div class="card-body px-lg-5 pt-0">
+            @if ($errors->has('licensz'))
+                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Hiba!</strong> {{ $errors->first('licensz') }}
 
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+        @endif
             <!-- Form -->
             <form class="text-center" style="color: #757575;" action="{{route('autok.store')}}" method="POST">
                 @if(!empty($model))

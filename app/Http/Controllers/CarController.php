@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autok;
+use App\Models\Licensz;
 use App\User;
 use App\ViewModels\InputAnyagok;
 use DataTables;
@@ -18,7 +19,8 @@ class CarController
 {
     public function index()
     {
-        return view('autok.index');
+        $licenscnt = Licensz::whereRaw(" root_user IN (Select id from users where root_user=?) or root_user = ? ", [\Auth::id(), \Auth::id()])->first();
+        return view('autok.index', compact('licenscnt'));
     }
 
     /**
@@ -30,8 +32,8 @@ class CarController
         return DataTables::eloquent($model)
             ->addIndexColumn()
             ->filter(function ($query) {
-                $query->where('user_id', '=', \Auth::id());
-                $query->orWhere('user_id', '=', User::where('id', '=', \Auth::id())->first()->root_user );
+                $query->whereRaw(" user_id IN (Select id from users where root_user=?) or user_id = ?", [\Auth::id(), \Auth::id()]);
+                $query->orWhere('user_id', '=', User::where('id', '=', \Auth::id())->first()->root_user);
 
                 if (request()->has('nev')) {
                     $query->where('nev', 'like', "'%" . request('nev') . "%'");
@@ -44,9 +46,8 @@ class CarController
     public function create()
     {
         $year = null;
-        for($i = date('Y'); $i>1900; $i--)
-        {
-            $year []=$i;
+        for ($i = date('Y'); $i > 1900; $i--) {
+            $year [] = $i;
         }
         return view('autok.formview', compact('year'));
     }
@@ -54,12 +55,11 @@ class CarController
     public function update($azonosito)
     {
         $year = null;
-        for($i = date('Y'); $i>1900; $i--)
-        {
-            $year []=$i;
+        for ($i = date('Y'); $i > 1900; $i--) {
+            $year [] = $i;
         }
         $model = Autok::where("azonosito", "=", $azonosito)->first()->toArray();
-        return view('autok.formview', compact("model", "azonosito","year"));
+        return view('autok.formview', compact("model", "azonosito", "year"));
     }
 
     public function store(Request $request)
@@ -73,11 +73,17 @@ class CarController
         $validator->after(function ($validator) use ($request, $method) {
 
             $cnt = Autok::where("rendszam", "=", $request->post('rendszam'))->count();
+
+            $carcnt = Autok::whereRaw(" user_id IN (Select id from users where root_user=?) or user_id = ? and rejtett = 0 ", [\Auth::id(), \Auth::id()])->count();
+            $licenscnt = Licensz::whereRaw(" root_user IN (Select id from users where root_user=?) or root_user = ? ", [\Auth::id(), \Auth::id()])->first();
+            if (intval($carcnt) >= intval($licenscnt->jarmu)) {
+                $validator->errors()->add('licensz', "Elfogyott a licensz! Maximális járműlicensz: " . $licenscnt->jarmu);
+            }
             if ($method == "mentes") {
                 if ($cnt > 0) {
                     $validator->errors()->add('rendszam', "A(z) " . $request->post('rendszam') . " már létezik !");
                 }
-                if ($request->post('uzemmod') == -1 ) {
+                if ($request->post('uzemmod') == -1) {
                     $validator->errors()->add('uzemmod', "A(z) " . $request->post('uzemmod') . " kötelező !");
                 }
             } else if ($method == "modositas") {
@@ -102,10 +108,10 @@ class CarController
 
         if ($method == "mentes") {
             $ia = new Autok();
-            $ia->rendszam = $request->post('rendszam');
+            $ia->rendszam = strtoupper($request->post('rendszam'));
             $ia->uzemmod = $request->post('uzemmod');
-            $ia->alvazszam = $request->post('alvazszam');
-            $ia->motorszam = $request->post('motorszam');
+            $ia->alvazszam = strtoupper($request->post('alvazszam'));
+            $ia->motorszam = strtoupper($request->post('motorszam'));
             $ia->gyartas_ev = $request->post('gyartas_ev');
             $ia->forgalomba_helyezes_ev = $request->post('forgalomba_helyezes_ev');
             $ia->marka = $request->post('marka');
@@ -119,10 +125,10 @@ class CarController
             return Redirect::to('autok/create')->with('success', 'Sikeres rögzítés!');
         } else if ($method == "modositas") {
             $ia = Autok::where('azonosito', $request->post('azonosito'))->first();
-            $ia->rendszam = $request->post('rendszam');
+            $ia->rendszam = strtoupper($request->post('rendszam'));
             $ia->uzemmod = $request->post('uzemmod');
-            $ia->alvazszam = $request->post('alvazszam');
-            $ia->motorszam = $request->post('motorszam');
+            $ia->alvazszam = strtoupper($request->post('alvazszam'));
+            $ia->motorszam = strtoupper($request->post('motorszam'));
             $ia->gyartas_ev = $request->post('gyartas_ev');
             $ia->forgalomba_helyezes_ev = $request->post('forgalomba_helyezes_ev');
             $ia->marka = $request->post('marka');
@@ -139,14 +145,30 @@ class CarController
 
     }
 
-    public function visible(Request $r)
+    public function visible(Request $request)
     {
-        $autok = Autok::where('azonosito', $r->post('id'))->first();
+
+        if(($request->post('checked') == "true")){
+            $autok = Autok::where('azonosito', $request->post('id'))->first();
+            if (!empty($autok)) {
+                $autok->rejtett = 1;
+                $autok->save();
+            }
+            return json_encode(['license' => true]);
+        }
+        $carcnt = Autok::whereRaw(" user_id IN (Select id from users where root_user=?) or user_id = ? and rejtett = 0 ", [\Auth::id(), \Auth::id()])->count();
+        $licenscnt = Licensz::whereRaw(" root_user IN (Select id from users where root_user=?) or root_user = ? ", [\Auth::id(), \Auth::id()])->first();
+
+            if (intval($carcnt) >= intval($licenscnt->jarmu)) {
+                return json_encode(['license' => false]);
+            }
+
+        $autok = Autok::where('azonosito', $request->post('id'))->first();
         if (!empty($autok)) {
-            $autok->rejtett = ($r->post('checked') == "true") ? 1 : 0;
+            $autok->rejtett = ($request->post('checked') == "true") ? 1 : 0;
             $autok->save();
         }
+        return json_encode(['license' => true]);
 
     }
-
 }

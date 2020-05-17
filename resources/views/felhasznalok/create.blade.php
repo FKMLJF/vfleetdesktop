@@ -13,8 +13,17 @@
             </ol>
         </nav>
         <div class="row justify-content-center">
+
             <div class="col-md-8">
                 <div class="card">
+                    @if(\Session::has('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {!! \Session::get('error') !!}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
                     <div class="card-header blue-gradient text-white">Felhasználó Létrehozás</div>
 
                     <div class="card-body">
@@ -79,7 +88,7 @@
                                     <label for="szerepkor" class="col-4 col-form-label">Szerepkör</label>
                                     <div class="col-8">
                                         <select id="szerepkor" name="szerepkor" aria-describedby="szerepkorHelpBlock" required="required"
-                                                class="custom-select selectpicker {{ $errors->has('_egyseg') ? ' is-invalid' : '' }}">
+                                                class="custom-select selectpicker select {{ $errors->has('_egyseg') ? ' is-invalid' : '' }}">
                                             <option value="-1">Válasszon a listából..</option>
                                             @foreach($select as $item)
 

@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Autok;
 use App\Models\Futasteljesitmeny;
 use App\Models\Hibajegy;
-use App\Models\munkalapok;
+use App\Models\Munkalapok;
 use App\User;
 use App\ViewModels\HibakView;
 use App\ViewModels\InputAnyagok;

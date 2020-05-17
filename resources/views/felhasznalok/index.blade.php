@@ -59,6 +59,13 @@
             <li class="breadcrumb-item active lg-text  text-white" aria-current="page">Felhasználók</li>
         </ol>
     </nav>
+    <div class=" alert alert-danger alert-dismissible error-alert" style="display: none" role="alert">
+        <strong>Hiba!</strong> <span id="error-text"></span>
+
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="row p-2">
         <div class="col-12">
             <table class="table table-bordered display dt-responsive nowrap" id="felhasznalok_table"
@@ -86,7 +93,10 @@
             </table>
         </div>
     </div>
-
+    @if(!empty($licenscnt))
+        <i style="position: absolute; bottom: 20px; right: 20px">Felhasználó licensz: <strong
+                id="licensevalue">{{$licenscnt->felhasznalo}}</strong> db</i>
+    @endif
 @endsection
 
 
@@ -137,11 +147,15 @@
                         },
                         {
                             "render": function (data, type, row) {
-
-                                if (data == "1") {
-                                    return '<input type="checkbox" checked data-id="' + row.id + '" data-event="tiltott" class="toggle-btn">'
-                                } else {
-                                    return '<input type="checkbox" data-id="' + row.id + '" data-event="tiltott"   class="toggle-btn">'
+                                if(row.id != {{Auth::id()}}) {
+                                    if (data == "1") {
+                                        return '<input type="checkbox" checked data-id="' + row.id + '" data-event="tiltott" class="toggle-btn">'
+                                    } else {
+                                        return '<input type="checkbox" data-id="' + row.id + '" data-event="tiltott"   class="toggle-btn">'
+                                    }
+                                }
+                                else{
+                                    return "<strong class='text-danger'>Nem módosítható!</strong>";
                                 }
 
                             },
@@ -163,21 +177,32 @@
                         });
 
                         $('.toggle-btn').change(function () {
-                            //$(this).prop('checked')
-                            $.ajax({
-                                url: "{{route('felhasznalok.userstatuschange')}}",
-                                method: 'POST',
-                                data: {
-                                    _token: "{{csrf_token()}}",
-                                    id: $(this).data('id'),
-                                    eventtype: $(this).data('event'),
-                                    checked: $(this).prop('checked')
-                                },
-                                context: document.body
-                            }).done(function (data) {
+                            let btn = $(this);
 
-                            });
+                                $.ajax({
+                                    url: "{{route('felhasznalok.userstatuschange')}}",
+                                    method: 'POST',
+                                    data: {
+                                        _token: "{{csrf_token()}}",
+                                        id: btn.data('id'),
+                                        eventtype: btn.data('event'),
+                                        checked: btn.prop('checked')
+                                    },
+                                    context: document.body,
+                                    dataType: "json",
+                                    success: function (data) {
+                                        console.log(data);
+                                        if (!data.license) {
 
+                                            btn.bootstrapToggle('on');
+                                            $(".error-alert").show();
+                                            $(".error-alert").fadeOut(3000);
+                                            $("#error-text").text("Elfogyott a licensz! Maximális felhasználó licensz:" + $('#licensevalue').text());
+                                            return -1;
+                                        }
+                                    }
+
+                                })
 
                         })
                     },

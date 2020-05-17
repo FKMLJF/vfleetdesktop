@@ -25,6 +25,15 @@
             <li class="breadcrumb-item active lg-text text-white" aria-current="page">Járművek</li>
         </ol>
     </nav>
+
+        <div class=" alert alert-danger alert-dismissible error-alert" style="display: none" role="alert">
+            <strong>Hiba!</strong> <span id="error-text"></span>
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
     <div class="row">
         <div class="col-12">
             <table class="table table-secondary table-bordered display dt-responsive nowrap" id="autok_table"
@@ -51,7 +60,9 @@
         </div>
 
     </div>
-
+    @if(!empty($licenscnt))
+        <i  style="position: absolute; bottom: 20px; right: 20px">Jármű licensz: <strong id="licensevalue">{{$licenscnt->jarmu}}</strong> db</i>
+    @endif
 
 @endsection
 
@@ -114,7 +125,7 @@
                         });
 
                         $('.toggle-btn').change(function () {
-                            //$(this).prop('checked')
+                            let btn = $(this);
                             $.ajax({
                                 url: "{{route('autok.visible')}}",
                                 method: 'POST',
@@ -123,9 +134,20 @@
                                     id: $(this).data('id'),
                                     checked: $(this).prop('checked')
                                 },
-                                context: document.body
-                            }).done(function (data) {
+                                context: document.body,
+                                dataType : "json",
+                                success: function (data) {
+                                    if(!data.license){
 
+                                        btn.bootstrapToggle('on');
+                                        $(".error-alert").show();
+                                        $(".error-alert").fadeOut(3000);
+                                        $("#error-text").text("Elfogyott a licensz! Maximális járműlicensz:"+ $('#licensevalue').text());
+                                        return -1;
+                                    }
+                                }
+                            }).done(function (data) {
+                                return -1;
                             });
 
 
