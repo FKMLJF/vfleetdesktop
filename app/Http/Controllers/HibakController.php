@@ -6,9 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Autok;
 use App\Models\Futasteljesitmeny;
 use App\Models\Hibajegy;
-use App\User;
 use App\ViewModels\HibakView;
-use App\ViewModels\InputAnyagok;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -119,7 +117,7 @@ class HibakController
 
     public function visible(Request $r)
     {
-        $hibak = hibak::where('azonosito', $r->post('id'))->first();
+        $hibak = Hibajegy::where('azonosito', $r->post('id'))->first();
         if (!empty($hibak)) {
             $hibak->rejtett = ($r->post('checked') == "true") ? 1 : 0;
             $hibak->save();

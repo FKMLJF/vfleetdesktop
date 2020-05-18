@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 use App\Models\Autok;
 use App\Models\Licensz;
 use App\User;
-use App\ViewModels\InputAnyagok;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;

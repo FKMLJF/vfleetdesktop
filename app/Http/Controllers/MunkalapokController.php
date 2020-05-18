@@ -7,9 +7,6 @@ use App\Models\Autok;
 use App\Models\Futasteljesitmeny;
 use App\Models\Hibajegy;
 use App\Models\Munkalapok;
-use App\User;
-use App\ViewModels\HibakView;
-use App\ViewModels\InputAnyagok;
 use App\ViewModels\MunkalapokView;
 use DataTables;
 use DB;
@@ -60,7 +57,7 @@ class MunkalapokController
     public function update($azonosito)
     {
         $select = Autok::whereRaw(  " rejtett = 0 and (user_id IN (Select id from users where root_user=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->get()->toArray();
-        $model = munkalapok::where("azonosito", "=", $azonosito)->first()->toArray();
+        $model = Munkalapok::where("azonosito", "=", $azonosito)->first()->toArray();
         $select2 = Hibajegy::whereRaw(  " javitva = 0 and user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->get()->toArray();
         return view('munkalapok.formview', compact("model", "azonosito","select", "select2"));
     }
@@ -126,7 +123,7 @@ class MunkalapokController
             ));
             return Redirect::to('munkalapok/create')->with('success', 'Sikeres rögzítés!');
         } else if ($method == "modositas") {
-            $ia = munkalapok::where('azonosito','=',  $request->post('azonosito'))->first();
+            $ia = Munkalapok::where('azonosito','=',  $request->post('azonosito'))->first();
             $ia->nev = $request->post('nev');
             $ia->ar = $request->post('ar');
             $ia->leiras = $request->post('leiras');
@@ -146,7 +143,7 @@ class MunkalapokController
 
     public function visible(Request $r)
     {
-        $munkalapok = munkalapok::where('azonosito', $r->post('id'))->first();
+        $munkalapok = Munkalapok::where('azonosito', $r->post('id'))->first();
         if (!empty($munkalapok)) {
             $munkalapok->rejtett = ($r->post('checked') == "true") ? 1 : 0;
             $munkalapok->save();

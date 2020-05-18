@@ -8,7 +8,6 @@ use App\Models\Szerepkor;
 use App\Models\SzerepkorKapcsolo;
 use App\User;
 use App\ViewModels\UserView;
-use Auth;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 

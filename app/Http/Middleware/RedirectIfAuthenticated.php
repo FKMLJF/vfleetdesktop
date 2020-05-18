@@ -37,6 +37,12 @@ class RedirectIfAuthenticated
                 $user = User::where('email', $request->post('email'))
                     ->first();
                 if(empty($user)) return Redirect::back()->withErrors(['Rossz e-mail vagy jelszó!']);
+                $szerepkor = SzerepkorKapcsolo::where('user_id',$user->id)
+                    ->first();
+                if($szerepkor->szerepkor_id == 1)
+                {
+                    return Redirect::back()->withErrors(['Nincs joga "Desktop" alkalmazás használatához!']);
+                }
                 if($user->megerositve == 0)
                 {
                     return Redirect::back()->withErrors(['A megadott felhasználó regisztrációja nincs megerősítve!']);

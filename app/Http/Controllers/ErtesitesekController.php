@@ -6,13 +6,11 @@ namespace App\Http\Controllers;
 use App\Models\Autok;
 use App\Models\Ertesitesek;
 use App\Models\Futasteljesitmeny;
-use App\User;
 use App\ViewModels\ErtesitesekView;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Mail;
 
 /**
  * Class ertesitesekTorzsController
@@ -31,20 +29,6 @@ class ErtesitesekController
     public
     function indexData(Request $request)
     {
-        /* $data = array(
-             'title'=>"VFleet Értesítés",
-             'ertesites' => 'Olajcsere',
-             "auto" => 'Mercedel ML 500 (KL-426) ',
-             "km_ora" => '12 313 KM'
-         );
-
-         Mail::send('mail', ['data' => $data], function($message) {
-             $message->to('jozsijo94@gmail.com', 'Értesítés')->subject
-             ('VFleet Értesítés');
-             $message->from('vfleetpostafleetposta@gmail.com','VFleet');
-         });*/
-
-        //(array)User::where('root_user', '=', \Auth::id())->get('id')
         $model = ErtesitesekView::query();
         return DataTables::eloquent($model)
             ->addIndexColumn()

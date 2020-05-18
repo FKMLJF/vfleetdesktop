@@ -6,11 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Autok;
 use App\Models\Dokumentumok;
 use App\Models\DokumentumTipusok;
-use App\Models\Futasteljesitmeny;
-use App\Models\Hibajegy;
-use App\User;
-use App\ViewModels\dokumentumokView;
-use App\ViewModels\InputAnyagok;
+use App\ViewModels\DokumentumokView;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -32,7 +28,6 @@ class DokumentumokController
      */
     public function indexData(Request $request)
     {
-        //(array)User::where('root_user', '=', \Auth::id())->get('id')
         $model = DokumentumokView::query();
         return DataTables::eloquent($model)
             ->addIndexColumn()
@@ -127,7 +122,7 @@ class DokumentumokController
 
     public function visible(Request $r)
     {
-        $dokumentumok = dokumentumok::where('azonosito', $r->post('id'))->first();
+        $dokumentumok = Dokumentumok::where('azonosito', $r->post('id'))->first();
         if (!empty($dokumentumok)) {
             $dokumentumok->rejtett = ($r->post('checked') == "true") ? 1 : 0;
             $dokumentumok->save();
