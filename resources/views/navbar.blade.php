@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md bg-primary text-white shadow-sm p-2">
-    <div class="container-fluid" style="background-image: url(/public/image/logo.png);  background-repeat: no-repeat; background-size: contain;">
+    <div class="container-fluid"></div>
         <a class="navbar-brand pl-4" href="{{ url('/') }}" >
            <img class=" waves-effect" style="width: 70px" src="{{asset('/images/vfleet.png')}}">
         </a>

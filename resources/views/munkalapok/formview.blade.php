@@ -226,7 +226,23 @@
 
 
 @section('extra_js')
+
     <script>
+        @if(!empty($hiba))
+        $(document).ready(function () {
+            $.ajax({
+                url: "{{route('ertesitesek.minkm')}}",
+                method: 'POST',
+                data: { auto_azonosito: {{$hiba->auto_azonosito}}, _token: "{{csrf_token()}}"},
+                dataType: "json",
+                success: function (data) {
+                    $(".km").text("( Minimum: "+ data.km + " )  ");
+                }
+            }).done(function (data) {
+                console.log(data);
+            });
+        })
+        @endif
         //hibajegy
         function select(elem){
             if($('#'+elem).val()!=-1)

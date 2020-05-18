@@ -41,7 +41,7 @@ class MunkalapokController
                     $query->where('auto_azonosito', 'like', "%" . request('auto_azonosito') . "%");
                 }
 
-                $query->whereRaw(  "user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()]);
+          //      $query->whereRaw(  "user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()]);
 
             }, true)
             ->toJson();
@@ -157,7 +157,8 @@ class MunkalapokController
 
     public function selecthibajegy(Request $request){
         $select2 = DB::select(DB::raw('select * from hibajegy where javitva = 0 and auto_azonosito = '.$request->post('auto_azonosito') ));
-        return view('munkalapok.selecthibajegy', compact('select2'));
+        $minkm= Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora');
+        return view('munkalapok.selecthibajegy', compact('select2', 'minkm'));
     }
 
 }

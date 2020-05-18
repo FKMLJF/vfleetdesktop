@@ -39,7 +39,7 @@ class HibakController
                 if (request()->has('auto_azonosito')) {
                     $query->where('auto_azonosito', 'like', "%" . request('auto_azonosito') . "%");
                 }
-                $query->whereRaw(" user_id IN (Select id from users where root_user=?) or user_id = ?", [\Auth::id(), \Auth::id()]);
+          //      $query->whereRaw(" user_id IN (Select id from users where root_user=?) or user_id = ?", [\Auth::id(), \Auth::id()]);
 
             }, true)
             ->toJson();
