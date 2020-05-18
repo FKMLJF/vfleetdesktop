@@ -46,10 +46,10 @@ class HomeController extends Controller
     {
         $usercnt = User::where('tiltott', '0')->whereRaw(  " id IN (Select id from users where root_user=?) or id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
         $carcnt = Autok::where('rejtett', '0')->whereRaw(  " (user_id IN (Select id from users where root_user=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->count() . ' db';
-        $munkalapcnt = Munkalapok::whereRaw(  " 1=1 ")->count() . ' db';
-        $hibacnt = HibakView::whereRaw(  " 1=1 ")->count() . ' db';
-        $ertcnt = Ertesitesek::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
-        $doccnt = Dokumentumok::whereRaw(  " user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $munkalapcnt = Munkalapok::whereRaw(" user_id IN (Select root_user from users where id=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $hibacnt = HibakView::whereRaw(" user_id IN (Select root_user from users where id=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $ertcnt = Ertesitesek::whereRaw(" user_id IN (Select root_user from users where id=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $doccnt = Dokumentumok::whereRaw(" user_id IN (Select root_user from users where id=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
 
         return json_encode(array($usercnt,$carcnt,$munkalapcnt,$hibacnt,$ertcnt,$doccnt));
     }

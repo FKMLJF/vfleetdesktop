@@ -131,6 +131,7 @@
                                 document.location.href = "{{url('/munkalapok/javitas/hiba/')}}/"+azonosito;
                             }
                         },
+                        @if(session('role', 0) == 3)
                         {
                             text: '<i class="fa fa-trash text-white" style="font-size: 16px" aria-hidden="true" title="Hibajegy törlése"></i>',
                             className: 'modositas-btn blue-gradient waves-effect',
@@ -139,6 +140,7 @@
                                 dialog(azonosito);
                             }
                         },
+                        @endif
                         {
                             text: '<i class="fa fa-spinner text-white" style="font-size: 16px" aria-hidden="true" title="Táblázat frissítése"></i>',
                             className: ' blue-gradient waves-effect',

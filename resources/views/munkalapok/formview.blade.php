@@ -175,7 +175,7 @@
                                    @else
                                    value="{{ $model['km_ora'] }}" readonly
                                 @endif>
-                            <label for="created_at" class="active"><strong class="text-danger">*</strong>Km óra <i class="km pl-2 pt-2"></i></label>
+                            <label for="km_ora" class="active km_ora"><strong class="text-danger">*</strong>Km óra <i class="km pl-2 pt-2"></i></label>
                             @if ($errors->has('km_ora'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong>Hiba!</strong> {{ $errors->first('km_ora') }}
@@ -237,6 +237,9 @@
                 dataType: "json",
                 success: function (data) {
                     $(".km").text("( Minimum: "+ data.km + " )  ");
+                    $("#km_ora").val(parseInt(data.km.replace("km", "").replace(" ", "")));
+                    $('label.km_ora').addClass("active");
+                    $('#created_at').val('{{date("Y-m-d")}}');
                 }
             }).done(function (data) {
                 console.log(data);

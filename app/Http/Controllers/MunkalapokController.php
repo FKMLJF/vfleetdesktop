@@ -41,7 +41,7 @@ class MunkalapokController
                     $query->where('auto_azonosito', 'like', "%" . request('auto_azonosito') . "%");
                 }
 
-          //      $query->whereRaw(  "user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()]);
+                $query->whereRaw("user_id IN (Select root_user from users where id=?) or user_id = ?", [\Auth::id(), \Auth::id()]);
 
             }, true)
             ->toJson();
@@ -49,25 +49,25 @@ class MunkalapokController
 
     public function create()
     {
-        $select = Autok::whereRaw(  " rejtett = 0 and (user_id IN (Select id from users where root_user=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->get()->toArray();
-        $select2 = Hibajegy::whereRaw(  " javitva = 0 and user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->get()->toArray();
-        return view('munkalapok.formview', compact( 'select', "select2"));
+        $select = Autok::whereRaw(" rejtett = 0 and (user_id IN (Select root_user from users where id=?) or user_id = ?)", [\Auth::id(), \Auth::id()])->get()->toArray();
+        $select2 = Hibajegy::whereRaw(" javitva = 0 and user_id IN (Select root_user from users where id=?) or user_id = ?", [\Auth::id(), \Auth::id()])->get()->toArray();
+        return view('munkalapok.formview', compact('select', "select2"));
     }
 
     public function update($azonosito)
     {
-        $select = Autok::whereRaw(  " rejtett = 0 and (user_id IN (Select id from users where root_user=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->get()->toArray();
+        $select = Autok::whereRaw(" rejtett = 0 and (user_id IN (Select root_user from users where id=?) or user_id = ?)", [\Auth::id(), \Auth::id()])->get()->toArray();
         $model = Munkalapok::where("azonosito", "=", $azonosito)->first()->toArray();
-        $select2 = Hibajegy::whereRaw(  " javitva = 0 and user_id IN (Select id from users where root_user=?) or user_id = ?",[\Auth::id(),\Auth::id()])->get()->toArray();
-        return view('munkalapok.formview', compact("model", "azonosito","select", "select2"));
+        $select2 = Hibajegy::whereRaw(" javitva = 0 and user_id IN (Select root_user from users where id=?) or user_id = ?", [\Auth::id(), \Auth::id()])->get()->toArray();
+        return view('munkalapok.formview', compact("model", "azonosito", "select", "select2"));
     }
 
     public function javitas($azonosito)
     {
-        $select = Autok::whereRaw(  " rejtett = 0 and (user_id IN (Select id from users where root_user=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->get()->toArray();
+        $select = Autok::whereRaw(" rejtett = 0 and (user_id IN (Select root_user from users where id=?) or user_id = ?)", [\Auth::id(), \Auth::id()])->get()->toArray();
         $hiba = DB::table('hibajegy')->where("azonosito", $azonosito)->first();
-        $select2 = Hibajegy::whereRaw(  " javitva = 0 and auto_azonosito = ? ",[$hiba->auto_azonosito])->get()->toArray();
-        return view('munkalapok.formview', compact("hiba", "azonosito","select", "select2"));
+        $select2 = Hibajegy::whereRaw(" javitva = 0 and auto_azonosito = ? ", [$hiba->auto_azonosito])->get()->toArray();
+        return view('munkalapok.formview', compact("hiba", "azonosito", "select", "select2"));
     }
 
     public function store(Request $request)
@@ -83,12 +83,11 @@ class MunkalapokController
 
         $validator->after(function ($validator) use ($request, $method) {
             if ($method == 'mentes') {
-            $minkm= Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora');
-            if(floatval($request->post('km_ora')) < floatval($minkm))
-            {
-                $validator->errors()->add('km_ora', 'Nem lehet kisebb mint az elöző kmóra állás!');
-            }
+                $minkm = Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora');
+                if (floatval($request->post('km_ora')) < floatval($minkm)) {
+                    $validator->errors()->add('km_ora', 'Nem lehet kisebb mint az elöző kmóra állás!');
                 }
+            }
             if ($request->post('auto_azonosito') == -1) {
                 $validator->errors()->add('auto_azonosito', "A(z) " . $request->post('auto_azonosito') . " kötelező !");
             }
@@ -118,12 +117,12 @@ class MunkalapokController
             $ia->user_id = \Auth::id();
             $ia->hiba_id = $request->post('hiba_id');
             $ia->save();
-            DB::table('hibajegy')->where('azonosito',  $request->post('hiba_id'))->update(array(
+            DB::table('hibajegy')->where('azonosito', $request->post('hiba_id'))->update(array(
                 "javitva" => 1
             ));
             return Redirect::to('munkalapok/create')->with('success', 'Sikeres rögzítés!');
         } else if ($method == "modositas") {
-            $ia = Munkalapok::where('azonosito','=',  $request->post('azonosito'))->first();
+            $ia = Munkalapok::where('azonosito', '=', $request->post('azonosito'))->first();
             $ia->nev = $request->post('nev');
             $ia->ar = $request->post('ar');
             $ia->leiras = $request->post('leiras');
@@ -132,7 +131,7 @@ class MunkalapokController
             $ia->hiba_id = $request->post('hiba_id');
             $ia->user_id = \Auth::id();
             $ia->save();
-            DB::table('hibajegy')->where('azonosito',  $request->post('hiba_id'))->update(array(
+            DB::table('hibajegy')->where('azonosito', $request->post('hiba_id'))->update(array(
                 "javitva" => 1
             ));
             return Redirect::to("munkalapok/szerkesztes/" . $request->post('azonosito'))->with('success', 'Sikeres módosítás!');
@@ -151,13 +150,17 @@ class MunkalapokController
 
     }
 
-    public function delete(Request $request){
-        return DB::table('munkalapok')->where('azonosito', $request->post('azonosito'))->delete();
+    public function delete(Request $request)
+    {
+        if (session('role', 0) == 3) {
+            return DB::table('munkalapok')->where('azonosito', $request->post('azonosito'))->delete();
+        }
     }
 
-    public function selecthibajegy(Request $request){
-        $select2 = DB::select(DB::raw('select * from hibajegy where javitva = 0 and auto_azonosito = '.$request->post('auto_azonosito') ));
-        $minkm= Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora');
+    public function selecthibajegy(Request $request)
+    {
+        $select2 = DB::select(DB::raw('select * from hibajegy where javitva = 0 and auto_azonosito = ' . $request->post('auto_azonosito')));
+        $minkm = Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora');
         return view('munkalapok.selecthibajegy', compact('select2', 'minkm'));
     }
 

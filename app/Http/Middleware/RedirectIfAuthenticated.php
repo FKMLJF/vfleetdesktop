@@ -30,7 +30,7 @@ class RedirectIfAuthenticated
         if (Auth::guard($guard)->check()) {
             return redirect(RouteServiceProvider::HOME);
         }
-
+        $szerepkor = null;
         if($request->getPathInfo() == "/login" && strtolower($request->getMethod()) == "post")
         {
             try{
@@ -58,7 +58,9 @@ class RedirectIfAuthenticated
             }
 
         }
-
+        if(!empty($szerepkor)){
+            $request->session()->put('role', $szerepkor->szerepkor_id);
+        }
 
         return $next($request);
     }
