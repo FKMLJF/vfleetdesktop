@@ -44,7 +44,7 @@
             @csrf
                 <div class="form-row">
                     <div class="col-3">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <input type="text" id="nev" name="nev"  required class="form-control"     @if(empty($model))
                             value="{{ old('nev') }}"
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     <div class="col-3">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <input type="text" id="ar" name="ar"  required class="form-control"     @if(empty($model))
                             value="{{ old('ar') }}"
@@ -149,7 +149,7 @@
                         </div>
                     </div>
                     <div class="col-2">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <input type="date" id="created_at" name="created_at"   class="form-control"     @if(empty($model))
                             value="{{ old('created_at') }}"
@@ -188,7 +188,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <textarea type="text" id="leiras" name="leiras" rows="8" class="form-control">@if(empty($model)){{ old('leiras')}}@else{{ $model['leiras']}}@endif</textarea>
                             <label for="leiras" class="active active2">Leírás</label>

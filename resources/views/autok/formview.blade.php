@@ -49,7 +49,7 @@
             @csrf
                 <div class="form-row">
                     <div class="col-4">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <input type="text" id="rendszam" name="rendszam"  required class="form-control"     @if(empty($model))
                             value="{{ old('rendszam') }}"
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <input type="text" id="marka" name="marka" class="form-control"   @if(empty($model))
                             value="{{ old('marka') }}"
@@ -144,7 +144,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <input type="text" id="hengerurtartalom" name="hengerurtartalom" class="form-control"   @if(empty($model))
                             value="{{ old('hengerurtartalom') }}"
@@ -176,7 +176,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <input type="text" id="tomeg" name="tomeg" class="form-control"   @if(empty($model))
                             value="{{ old('tomeg') }}"
@@ -208,7 +208,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <input type="text" id="alvazszam" name="alvazszam" class="form-control"   @if(empty($model))
                             value="{{ old('alvazszam') }}"
@@ -240,7 +240,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <!-- First name -->
+
                         <div class="md-form">
 
                             <select id="forgalomba_helyezes_ev"  name="forgalomba_helyezes_ev" onchange="onchangeselect('forgalomba_helyezes_ev')" class="form-control select">

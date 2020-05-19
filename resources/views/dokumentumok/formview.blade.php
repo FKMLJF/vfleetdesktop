@@ -195,7 +195,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <!-- First name -->
+
                         <div class="md-form">
                             <textarea type="text" id="leiras" name="leiras" rows="8" class="form-control">@if(empty($model)){{ old('leiras')}}@else{{ $model['leiras']}}@endif</textarea>
                             <label for="leiras" class="active active2">Leírás</label>

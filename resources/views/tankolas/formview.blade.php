@@ -11,7 +11,7 @@
     <nav aria-label="breadcrumb text-monospace">
         <ol class="breadcrumb bg-primary">
             <li class="breadcrumb-item "><a class="text-decoration-none text-white lg-text"  href="{{route('home')}}">Főoldal</a></li>
-            <li class="breadcrumb-item"><a class="text-decoration-none text-white lg-text" href="{{route('hibak.index')}}">Hibajegyek</a></li>
+            <li class="breadcrumb-item"><a class="text-decoration-none text-white lg-text" href="{{route('tankolas.index')}}">Tankolások</a></li>
             <li class="breadcrumb-item active lg-text text-white"
                 aria-current="page">{!! (!empty($model)?'Módosítás: <strong class="text-danger">' . $model['azonosito'] . '</strong>' :'Létrehozás')!!}</li>
         </ol>
@@ -26,12 +26,12 @@
     @endif
     <div class="card m-2 ">
 
-        <div class="card-header blue-gradient text-white">Hibajegy rögzítés</div>
+        <div class="card-header blue-gradient text-white">Tankolás rögzítés</div>
         <!--Card content-->
         <div class="card-body px-lg-5 pt-0">
 
             <!-- Form -->
-            <form class="text-center" style="color: #757575;" action="{{route('hibak.store')}}" method="POST">
+            <form class="text-center" style="color: #757575;" action="{{route('tankolas.store')}}" method="POST">
                 @if(!empty($model))
                     <input type="hidden" value="modositas" name="store_method">
                     <input type="hidden" value="{{$model['azonosito']}}" name="azonosito">
@@ -46,16 +46,26 @@
                         <div class="md-form">
 
                             <select id="auto_azonosito"  name="auto_azonosito" onchange="select('auto_azonosito')" class="form-control select">
-                                <option value="-1"></option>
-                                @foreach($select as $item)
-                                    <option value="{{$item['azonosito']}}"
-                                    @if(empty($model))
-                                        {!! old('auto_azonosito')==$item['azonosito']?'selected':'' !!}
-                                        @else
-                                        {!! $model['auto_azonosito']==$item['azonosito']?'selected':'' !!}
-                                        @endif
-                                    >{{$item['marka']}} {{$item['tipus']}} ({{$item['rendszam']}})</option>
-                                @endforeach
+                                @if(!empty($model))
+                                    @foreach($select as $item)
+                                        @if($model['auto_azonosito']==$item['azonosito'])
+                                            <option value="{{$item['azonosito']}}"  >{{$item['marka']}} {{$item['tipus']}} ({{$item['rendszam']}})</option>
+                                            @endif
+                                    @endforeach
+                                    @else
+                                    <option value="-1"></option>
+                                    @foreach($select as $item)
+                                        <option value="{{$item['azonosito']}}"
+                                        @if(empty($model))
+                                            {!! old('auto_azonosito')==$item['azonosito']?'selected':'' !!}
+                                            @else
+                                            {!! $model['auto_azonosito']==$item['azonosito']?'selected':'' !!}
+                                            @endif
+                                        >{{$item['marka']}} {{$item['tipus']}} ({{$item['rendszam']}})</option>
+                                    @endforeach
+                                @endif
+
+
                             </select>
                             <label for="auto_azonosito" class="{!! !empty($model['auto_azonosito'])?'active':'' !!}"><strong class="text-danger">*</strong> Jármű</label>
                             @if ($errors->has('auto_azonosito'))
@@ -71,12 +81,12 @@
                     </div>
                     <div class="col-3">
                         <div class="md-form">
-                            <input type="number" id="km_ora" name="km_ora" required  class="form-control"     @if(empty($model))
+                            <input type="number" id="km_ora" name="km_ora"   @if(!empty($model)) readonly @endif class="form-control"     @if(empty($model))
                             value="{{ old('km_ora') }}"
                                    @else
                                    value="{{ $model['km_ora'] }}" readonly
                                 @endif>
-                            <label for="created_at" class="active"><strong class="text-danger">*</strong>Km óra <i class="km pl-2 pt-2"></i></label>
+                            <label for="liter" class="active"><strong class="text-danger">*</strong> Km óra <i class="km pl-2 pt-2"></i></label>
                             @if ($errors->has('km_ora'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong>Hiba!</strong> {{ $errors->first('km_ora') }}
@@ -91,15 +101,15 @@
                     <div class="col-3">
 
                         <div class="md-form">
-                            <input type="date" id="created_at" name="created_at"   class="form-control"     @if(empty($model))
-                            value="{{ old('created_at') }}"
+                            <input type="number" id="liter" name="liter"   class="form-control"     @if(empty($model))
+                            value="{{ old('liter') }}"
                                    @else
-                                   value="{{ substr($model['created_at'], 0,10) }}"
+                                   value="{{ substr($model['liter'], 0,10) }}"
                                 @endif>
-                            <label for="created_at" class="active"> Észlelve</label>
-                            @if ($errors->has('created_at'))
+                            <label for="liter" class="active"> Liter</label>
+                            @if ($errors->has('liter'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('created_at') }}
+                                    <strong>Hiba!</strong> {{ $errors->first('liter') }}
 
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -108,14 +118,18 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-3">
 
                         <div class="md-form">
-                            <textarea type="text" id="leiras" name="leiras" rows="8" class="form-control">@if(empty($model)){{ old('leiras')}}@else{{ $model['leiras']}}@endif</textarea>
-                            <label for="leiras" class="active active2">Leírás</label>
-                            @if ($errors->has('leiras'))
+                            <input type="number" id="osszeg" name="osszeg"   class="form-control"     @if(empty($model))
+                            value="{{ old('osszeg') }}"
+                                   @else
+                                   value="{{ substr($model['osszeg'], 0,10) }}"
+                                @endif>
+                            <label for="liter" class="active"> Összeg</label>
+                            @if ($errors->has('osszeg'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('leiras') }}
+                                    <strong>Hiba!</strong> {{ $errors->first('osszeg') }}
 
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>

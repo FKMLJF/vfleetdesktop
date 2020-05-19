@@ -207,4 +207,47 @@ Route::middleware(['auth','2fa' ])->group(function () {
 
             Route::post('sendmail', 'MailSenderController@sendmail')->name('sendmail');
         });
+
+    Route::as('tankolas.')
+        ->prefix('tankolas')
+        ->group(function () {
+
+            Route::get('index', 'TankolasController@index')->name('index');
+
+            Route::get('create', 'TankolasController@create')->name('create');
+
+            Route::get('szerkesztes/{azonosito}', 'TankolasController@update')->name('szerkesztes')->where(array('azonosito' => '[0-9]+'));
+
+            Route::post('store', 'TankolasController@store')->name('store');
+
+            /**AJAX*/
+
+            Route::get('indexdata', 'TankolasController@indexData')->name('indexdata');
+
+            Route::post('visible', 'TankolasController@visible')->name('visible');
+
+            Route::post('delete', 'TankolasController@delete')->name('delete');
+        });
+
+    Route::as('tartozek.')
+        ->prefix('tartozek')
+        ->group(function () {
+
+            Route::get('index', 'TartozekokController@index')->name('index');
+
+            Route::get('create', 'TartozekokController@create')->name('create');
+
+            Route::get('szerkesztes/{azonosito}', 'TartozekokController@update')->name('szerkesztes')->where(array('azonosito' => '[0-9]+'));
+
+            Route::post('store', 'TartozekokController@store')->name('store');
+
+            /**AJAX*/
+
+            Route::get('indexdata', 'TartozekokController@indexData')->name('indexdata');
+
+            Route::post('visible', 'TartozekokController@visible')->name('visible');
+
+            Route::post('delete', 'TartozekokController@delete')->name('delete');
+        });
+
 });

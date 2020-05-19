@@ -205,7 +205,7 @@
     </script>
     <script src="{{asset('jquery-ui/jquery-ui.min.js')}}"></script>
 
-    {{-- Ez valami sátán, megöli a a dropdown menut bs4-ben--}}
+
     <!-- <script defer  src="{{asset('js/DataTable/bootstrap.min.js')}}"></script> -->
     <script defer  src="{{asset('js/DataTable/dataTables.bootstrap4.min.js')}}"></script>
     <script defer  src="{{asset('js/DataTable/dataTables.responsive.min.js')}}"></script>
