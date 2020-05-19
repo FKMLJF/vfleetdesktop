@@ -54,43 +54,22 @@ class TartozekokController
     public function update($azonosito)
     {
         $select = Autok::whereRaw(" rejtett = 0 and ( user_id IN (Select root_user from users where id=?) or user_id = ? )", [\Auth::id(), \Auth::id()])->get()->toArray();
-        $model = (array)DB::table('tartozek')->where("azonosito", $azonosito)->get()->first();
+        $model = (array)DB::table('autok_tartozekok')->where("azonosito", $azonosito)->get()->first();
         return view('tartozekok.formview', compact("model", "azonosito", "select"));
     }
 
     public function store(Request $request)
     {
         $method = $request->post("store_method");
-        if ($method == 'mentes') {
-            $validator = \Validator::make($request->all(), [
-                'liter' => 'required|numeric',
-                'osszeg' => 'required|numeric',
-                'auto_azonosito' => 'required|numeric',
-                'km_ora' => 'required|numeric',
-            ]);
-        }
-        else{
-            $validator = \Validator::make($request->all(), [
-                'liter' => 'required|numeric',
-                'osszeg' => 'required|numeric',
-            ]);
-        }
 
+        $validator = \Validator::make($request->all(), [
+            'tartozek_neve' => 'required',
+            'mennyiseg' => 'required|numeric',
+            'auto_azonosito' => 'required|numeric',
+            'lejarat' => 'date|nullable',
+            'ertesites_nap' => 'numeric|nullable',
+        ]);
 
-        // dd($request->post());
-
-        $validator->after(function ($validator) use ($request, $method) {
-            if ($method == 'mentes') {
-                $minkm = Futasteljesitmeny::where('auto_azonosito', $request->post('auto_azonosito'))->max('km_ora');
-                if (floatval($request->post('km_ora')) < floatval($minkm)) {
-                    $validator->errors()->add('km_ora', 'Nem lehet kisebb mint az elöző kmóra állás!');
-                }
-            }
-            if ($request->post('auto_azonosito') == -1) {
-                $validator->errors()->add('auto_azonosito', "A(z) " . $request->post('auto_azonosito') . " kötelező !");
-            }
-
-        });
 
         if ($validator->fails()) {
             if ($method == "mentes") {
@@ -106,18 +85,26 @@ class TartozekokController
 
         if ($method == "mentes") {
             $ia = new AutokTartozekok();
-            $ia->osszeg = $request->post('osszeg');
-            $ia->km_ora = $request->post('km_ora');
-            $ia->liter = $request->post('liter');
+            $ia->tartozek_neve = $request->post('tartozek_neve');
+            $ia->mennyiseg = $request->post('mennyiseg');
+            $ia->leiras = $request->post('leiras');
+            $ia->lejarat = $request->post('lejarat');
+            $ia->ertesites_nap = $request->post('ertesites_nap');
+            $ia->cimzettek = $request->post('cimzettek');
             $ia->auto_azonosito = $request->post('auto_azonosito');
             $ia->user_id = \Auth::id();
             $ia->save();
             return Redirect::to('tartozek/create')->with('success', 'Sikeres rögzítés!');
         } else if ($method == "modositas") {
             DB::table('autok_tartozekok')->where('azonosito', $request->post('azonosito'))->update(array(
-                "liter" => $request->post('liter'),
-                "osszeg" => $request->post('osszeg'),
-                "update_at" => DB::raw('Now()'),
+                "tartozek_neve" => $request->post('tartozek_neve'),
+                "mennyiseg" => $request->post('mennyiseg'),
+                "leiras" => $request->post('leiras'),
+                "lejarat" => $request->post('lejarat'),
+                "ertesites_nap" => $request->post('ertesites_nap'),
+                "cimzettek" => $request->post('cimzettek'),
+                "auto_azonosito" => $request->post('auto_azonosito'),
+                "updated_at" => DB::raw('Now()'),
                 "user_id" => \Auth::id()
             ));
             return Redirect::to("tartozek/szerkesztes/" . $request->post('azonosito'))->with('success', 'Sikeres módosítás!');

@@ -26,7 +26,7 @@
     <nav aria-label="breadcrumb ">
         <ol class="breadcrumb bg-primary">
             <li class="breadcrumb-item "><a class="text-decoration-none text-white lg-text" href="{{route('home')}}">Főoldal</a></li>
-            <li class="breadcrumb-item active lg-text text-white" aria-current="page">Hibajegyek</li>
+            <li class="breadcrumb-item active lg-text text-white" aria-current="page">Dokumentumok</li>
         </ol>
     </nav>
     <div class="row">

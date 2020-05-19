@@ -40,6 +40,8 @@
                 <th>Tartozék</th>
                 <th>Mennyiség</th>
                 <th>Lejárat</th>
+                <th>Értesítés nap</th>
+                <th>Címzettek</th>
                 <th>Rögzitö</th>
                 <th>Rögzítve</th>
                 </thead>
@@ -52,6 +54,8 @@
                 <th>Tartozék</th>
                 <th>Mennyiség</th>
                 <th>Lejárat</th>
+                <th>Értesítés nap</th>
+                <th>Címzettek</th>
                 <th>Rögzitö</th>
                 <th>Rögzítve</th>
                 </tfoot>
@@ -93,6 +97,8 @@
                         {data: 'tartozek_neve', name: 'tartozek_neve'},
                         {data: 'mennyiseg', name: 'mennyiseg'},
                         {data: 'lejarat', name: 'lejarat'},
+                        {data: 'ertesites_nap', name: 'ertesites_nap'},
+                        {data: 'cimzettek', name: 'cimzettek'},
                         {data: 'rogzito', name: 'rogzito'},
                         {data: 'created_at', name: 'created_at'},
                     ],
@@ -102,7 +108,7 @@
                                 return data.substring(0,10);
 
                             },
-                            "targets": 7
+                            "targets": 9
                         },
                     ],
                     "drawCallback": function (settings) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autok;
+use App\Models\AutokTartozekok;
 use App\Models\Dokumentumok;
 use App\Models\Ertesitesek;
 use App\Models\Munkalapok;
@@ -51,9 +52,10 @@ class HomeController extends Controller
         $hibacnt = HibakView::whereRaw(" user_id IN (Select root_user from users where id=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
         $ertcnt = Ertesitesek::whereRaw(" user_id IN (Select root_user from users where id=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
         $doccnt = Dokumentumok::whereRaw(" user_id IN (Select root_user from users where id=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
+        $store_cnt = AutokTartozekok::whereRaw(" user_id IN (Select root_user from users where id=?) or user_id = ?",[\Auth::id(),\Auth::id()])->count() . ' db';
         $fuelcnt= number_format(Tankola::whereRaw(" Year(inserted_at) = Year(Now())  and (user_id IN (Select root_user from users where id=?) or user_id = ?)",[\Auth::id(),\Auth::id()])->sum('osszeg'),0,".", " ") . ' Ft ('.date('Y').")";
 
-        return json_encode(array($usercnt,$carcnt,$munkalapcnt,$hibacnt,$ertcnt,$doccnt, $fuelcnt));
+        return json_encode(array($usercnt,$carcnt,$munkalapcnt,$hibacnt,$ertcnt,$doccnt, $fuelcnt,$store_cnt));
     }
 
 

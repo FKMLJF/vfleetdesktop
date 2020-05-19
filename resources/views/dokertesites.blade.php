@@ -48,25 +48,46 @@
 
 </head>
 <body >
-<h3>Értesítés dokumentum lejártáról.</h3>
+@if(!empty($data['ig']))
+    <h3>Értesítés dokumentum lejártáról.</h3>
+@else
+    <h3>Értesítés tartozék lejártáról.</h3>
+@endif
+
 <span> A <strong class="text-danger">"{{$data['tipus']}}"</strong>  érvényessége  <strong class="text-danger">{{$data['nap']}}</strong> nap múlva lejár a <strong class="text-danger">{{$data['auto']}}</strong>  járműnél!</span>
 <table class="zui-table">
     <thead>
     <tr class="bg">
+        @if(!empty($data['ig']))
         <th width="250">Dokumentum</th>
+        @else
+            <th width="250">Tartozék neve</th>
+        @endif
+       @if(!empty($data['ig']))
         <th width="80">Tól</th>
         <th width="80">Ig</th>
+        @else
+            <th width="80">Lejárat</th>
+        @endif
         <th width="250">Jármű</th>
+        @if(!empty($data['ar']))
         <th width="100">Ár</th>
+        @endif
     </tr>
     </thead>
     <tbody>
     <tr>
         <td>{{$data['tipus']}}</td>
-        <td>{{substr($data['tol'],0,10)}}</td>
-        <td>{{substr($data['ig'],0,10)}}</td>
+        @if(!empty($data['ig']))
+            <td>{{substr($data['tol'],0,10)}}</td>
+            <td>{{substr($data['ig'],0,10)}}</td>
+        @else
+            <td>{{substr($data['tol'],0,10)}}</td>
+        @endif
         <td>{{$data['auto']}}</td>
+        @if(!empty($data['ar']))
         <td>{{$data['ar']}} Ft</td>
+        @endif
     </tr>
 
     </tbody>

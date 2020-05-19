@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Autok;
+use App\Models\AutokTartozekok;
 use App\Models\Dokumentumok;
 use App\Models\Ertesitesek;
 use App\Models\Futasteljesitmeny;
 use App\ViewModels\DokumentumokView;
+use App\ViewModels\TartozekokView;
 use DB;
 use Illuminate\Http\Request;
 use Mail;
@@ -97,6 +99,46 @@ class MailSenderController
                     ));
                 }
             }
+        }
+
+        /**
+         * TARTOZÉKOK ÉRTESITÉSEK
+         */
+        try{
+        $tartozekok = AutokTartozekok::whereRaw(" ertesites_nap is not null and ABS(DATEDIFF(lejarat, now())) >= ertesites_nap and (ertesitve is null or ertesitve = 0)")->get()->toArray();
+        if(!empty($tartozekok)){
+            foreach ($tartozekok as $item) {
+                $auto = Autok::whereRaw(" rejtett = 0 and ( user_id IN (Select id from users where root_user=?) or user_id = ? ) and azonosito = ?", [\Auth::id(), \Auth::id(), $item['auto_azonosito']])->first()->toArray();
+                $tartozek_view = TartozekokView::where("azonosito", $item['azonosito'])->first()->toArray();
+                $cimek = explode(';', $item['cimzettek']);
+                if (count($cimek) > 0) {
+                    foreach ($cimek as $cim) {
+                        $data = array(
+                            'title' => "VFleet Értesítés",
+                            'tipus' => $tartozek_view['tartozek_neve'],
+                            "auto" => $tartozek_view['auto'],
+                            "rendszam" => $auto["rendszam"],
+                            "nap" => $item["ertesites_nap"],
+                            "tol" => $item["lejarat"],
+
+                        );
+
+                        Mail::send('dokertesites', ['data' => $data], function ($message) use ($cim, $item,$auto, $tartozek_view) {
+                            $message->to($cim, $item['tartozek_neve'])->subject
+                            ('VFleet Értesítés: '.$tartozek_view['tartozek_neve'] . " lejártáról (" . $auto["rendszam"]. ")");
+                            $message->from('vfleetpostafleetposta@gmail.com', 'VFleet');
+                        });
+                    }
+                    DB::table('autok_tartozekok')->where('azonosito', $item['azonosito'])->update(array(
+                        "updated_at" => DB::raw('now()'),
+                        "ertesitve" => DB::raw('1'),
+
+                    ));
+                }
+            }
+        }}
+        catch (\Exception $e){
+            dd($e);
         }
         return json_encode(["success" => true]);
     }

@@ -45,7 +45,7 @@
 
                         <div class="md-form">
 
-                            <select id="auto_azonosito"  name="auto_azonosito" onchange="select('auto_azonosito')" class="form-control select">
+                            <select id="auto_azonosito"  name="auto_azonosito" onchange="onchangeselect('auto_azonosito')" class="form-control select">
                                 @if(!empty($model))
                                     @foreach($select as $item)
                                         @if($model['auto_azonosito']==$item['azonosito'])
@@ -81,15 +81,15 @@
                     </div>
                     <div class="col-3">
                         <div class="md-form">
-                            <input type="number" id="km_ora" name="km_ora"   @if(!empty($model)) readonly @endif class="form-control"     @if(empty($model))
-                            value="{{ old('km_ora') }}"
+                            <input type="text" id="tartozek_neve" name="tartozek_neve"   @if(!empty($model)) readonly @endif class="form-control"     @if(empty($model))
+                            value="{{ old('tartozek_neve') }}"
                                    @else
-                                   value="{{ $model['km_ora'] }}" readonly
+                                   value="{{ $model['tartozek_neve'] }}" readonly
                                 @endif>
-                            <label for="liter" class="active"><strong class="text-danger">*</strong> Km óra <i class="km pl-2 pt-2"></i></label>
-                            @if ($errors->has('km_ora'))
+                            <label for="tartozek_neve" class="active"><strong class="text-danger">*</strong> Tartozék neve <i class="km pl-2 pt-2"></i></label>
+                            @if ($errors->has('tartozek_neve'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('km_ora') }}
+                                    <strong>Hiba!</strong> {{ $errors->first('tartozek_neve') }}
 
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -101,15 +101,15 @@
                     <div class="col-3">
 
                         <div class="md-form">
-                            <input type="number" id="liter" name="liter"   class="form-control"     @if(empty($model))
-                            value="{{ old('liter') }}"
+                            <input type="number" id="mennyiseg" name="mennyiseg" required  class="form-control"     @if(empty($model))
+                            value="{{ old('mennyiseg') }}"
                                    @else
-                                   value="{{ substr($model['liter'], 0,10) }}"
+                                   value="{{ substr($model['mennyiseg'], 0,10) }}"
                                 @endif>
-                            <label for="liter" class="active"> Liter</label>
-                            @if ($errors->has('liter'))
+                            <label for="mennyiseg" class="active"><strong class="text-danger">*</strong> Mennyiség</label>
+                            @if ($errors->has('mennyiseg'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('liter') }}
+                                    <strong>Hiba!</strong> {{ $errors->first('mennyiseg') }}
 
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -121,15 +121,69 @@
                     <div class="col-3">
 
                         <div class="md-form">
-                            <input type="number" id="osszeg" name="osszeg"   class="form-control"     @if(empty($model))
-                            value="{{ old('osszeg') }}"
+                            <input type="date" id="lejarat" name="lejarat"   class="form-control"     @if(empty($model))
+                            value="{{ old('lejarat') }}"
                                    @else
-                                   value="{{ substr($model['osszeg'], 0,10) }}"
+                                   value="{{ substr($model['lejarat'], 0,10) }}"
                                 @endif>
-                            <label for="liter" class="active"> Összeg</label>
-                            @if ($errors->has('osszeg'))
+                            <label for="lejarat" class="active"> Lejárat</label>
+                            @if ($errors->has('lejarat'))
                                 <div class=" alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Hiba!</strong> {{ $errors->first('osszeg') }}
+                                    <strong>Hiba!</strong> {{ $errors->first('lejarat') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="md-form">
+                            <input type="number" id="ertesites_nap" name="ertesites_nap"   class="form-control"     @if(empty($model))
+                            value="{{ old('ertesites_nap') }}"
+                                   @else
+                                   value="{{ $model['ertesites_nap']}}"
+                                @endif>
+                            <label for="created_at" class="active"> Értesités nap</label>
+                            @if ($errors->has('ertesites_nap'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('ertesites_nap') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="md-form">
+                            <input type="text" id="cimzettek" name="cimzettek"    class="form-control"     @if(empty($model))
+                            value="{{ old('cimzettek') }}"
+                                   @else
+                                   value="{{ $model['cimzettek'] }}"
+                                @endif>
+                            <label for="created_at" class="active">Címzettek <strong class="text-danger">(E-mail címek ponto vessővel ( ; ) elválasztva!)</strong></label>
+                            @if ($errors->has('cimzettek'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('cimzettek') }}
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-12">
+
+                        <div class="md-form">
+                            <textarea type="text" id="leiras" name="leiras" rows="8" class="form-control">@if(empty($model)){{ old('leiras')}}@else{{ $model['leiras']}}@endif</textarea>
+                            <label for="leiras" class="active active2">Leírás</label>
+                            @if ($errors->has('leiras'))
+                                <div class=" alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Hiba!</strong> {{ $errors->first('leiras') }}
 
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -162,26 +216,7 @@
 
 @section('extra_js')
     <script>
-        function select(elem){
-            if($('#'+elem).val()!=-1)
-            {
-                $('#'+elem).siblings("label").addClass('active');
-            }else{
-                $('#'+elem).siblings("label").removeClass('active');
-            }
 
-            $.ajax({
-                url: "{{route('ertesitesek.minkm')}}",
-                method: 'POST',
-                data: { auto_azonosito: $('#'+elem).val(), _token: "{{csrf_token()}}"},
-                dataType: "json",
-                success: function (data) {
-                    $(".km").text("( Minimum: "+ data.km + " )  ");
-                }
-            }).done(function (data) {
-                console.log(data);
-            });
-        }
         function onchangeselect(elem){
             if($('#'+elem).val()!=-1)
             {

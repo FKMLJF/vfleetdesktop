@@ -7,7 +7,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" >
+    <div class="collapse navbar-collapse">
         <!-- Left Side Of Navbar -->
         <ul class="navbar-nav mr-auto">
             @if(!empty(session('role')) && session('role') == 3)
@@ -46,25 +46,23 @@
                     <a class="nav-link   text-white" href="{{ route('dokumentumok.index') }}">
                         {{__('Dokumentumok')}} <span class="caret"></span>
                     </a>
-                </li>@endif
+                </li>
+            @endif
+            @if(!empty(session('role')) && session('role') == 3)
+                <li class="nav-item pl-2 pr-2">
+                    <a class="nav-link   text-white" href="{{ route('tankolas.index') }}">
+                        {{__('Tankolások')}} <span class="caret"></span>
+                    </a>
+                </li>
+            @endif
+            @if(!empty(session('role')) && session('role') == 3)
+                <li class="nav-item pl-2 pr-2">
+                    <a class="nav-link   text-white" href="{{ route('tartozek.index') }}">
+                        {{__('Autó tartozékok')}} <span class="caret"></span>
+                    </a>
+                </li>
+            @endif
 
-            {{--   <li class="nav-item dropdown">
-                   <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                       {{__('Traktoros felületek')}} <span class="caret"></span>
-                   </a>
-                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                       <a class="dropdown-item" href="{{ route('traktoros.szolgaltatas') }}">
-                           {{ __('Szolgáltatás felhasználás') }}
-                       </a>
-                       <a class="dropdown-item" href="{{ route('traktoros.anyag_elvitel') }}">
-                           {{ __('Anyag elvitel') }}
-                       </a>
-                       <a class="dropdown-item" href="{{ route('traktoros.termeny_elvitel') }}">
-                           {{ __('Termény elvitel') }}
-                       </a>
-                   </div>
-               </li> --}}
         </ul>
 
         <!-- Right Side Of Navbar -->
