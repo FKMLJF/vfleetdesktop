@@ -81,10 +81,10 @@
                     </div>
                     <div class="col-3">
                         <div class="md-form">
-                            <input type="text" id="tartozek_neve" name="tartozek_neve"   @if(!empty($model)) readonly @endif class="form-control"     @if(empty($model))
+                            <input type="text" id="tartozek_neve" name="tartozek_neve"  class="form-control"     @if(empty($model))
                             value="{{ old('tartozek_neve') }}"
                                    @else
-                                   value="{{ $model['tartozek_neve'] }}" readonly
+                                   value="{{ $model['tartozek_neve'] }}"
                                 @endif>
                             <label for="tartozek_neve" class="active"><strong class="text-danger">*</strong> Tartozék neve <i class="km pl-2 pt-2"></i></label>
                             @if ($errors->has('tartozek_neve'))
